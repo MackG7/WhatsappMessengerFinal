@@ -1,0 +1,25 @@
+.wa-tabs{
+    display:flex;
+    background-color:#111b21;
+    border-bottom:1px solid #202c33;
+}
+
+.wa-tab{
+    flex:1;
+    text-align:center;
+    padding:14px 0;
+    cursor:pointer;
+    color:#8696a0;
+    font-size:14px;
+    font-weight:500;
+    transition:background .2s ease, color .2s ease;
+}
+
+.wa-tab:hover{
+    background-color:#202c33;
+}
+
+.wa-tab.active{
+    color:#e9edef;
+    border-bottom:3px solid #25d366;
+}

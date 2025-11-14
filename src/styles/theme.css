@@ -1,0 +1,74 @@
+/* src/styles/theme.css */
+
+/* Paleta base WhatsApp (aprox) */
+:root {
+    --wa-radius: 12px;
+    --wa-radius-pill: 20px;
+    --wa-shadow: 0 1px 2px rgba(0, 0, 0, .12), 0 4px 12px rgba(0, 0, 0, .08);
+
+    /* Tipografía */
+    --wa-text: #111b21;
+    --wa-text-muted: #667781;
+
+    /* Burbujas */
+    --wa-bubble-in: #d9fdd3;
+    /* incoming (otro) */
+    --wa-bubble-out: #005c4b;
+    /* outgoing (mía) */
+    --wa-bubble-out-text: #e9edef;
+
+    /* Input */
+    --wa-input-bg: #f0f2f5;
+    --wa-input-text: #111b21;
+    --wa-input-border: #e1e4e8;
+
+    /* Accentos */
+    --wa-accent: #25d366;
+}
+
+/* Tema claro */
+:root[data-theme="light"] {
+    --wa-bg: #f0f2f5;
+    --wa-panel: #ffffff;
+    --wa-panel-2: #ffffff;
+    --wa-header: #f0f2f5;
+    --wa-border: #e1e4e8;
+    --wa-scrollbar: #c8d1d8;
+}
+
+/* Tema oscuro (WhatsApp web actual) */
+:root[data-theme="dark"] {
+    --wa-bg: #0b141a;
+    --wa-panel: #111b21;
+    --wa-panel-2: #202c33;
+    --wa-header: #202c33;
+    --wa-border: #2a3942;
+    --wa-scrollbar: #2a3942;
+
+    --wa-text: #e9edef;
+    --wa-text-muted: #8696a0;
+
+    --wa-bubble-in: #202c33;
+    --wa-bubble-out: #005c4b;
+    --wa-bubble-out-text: #e9edef;
+
+    --wa-input-bg: #2a3942;
+    --wa-input-text: #e9edef;
+    --wa-input-border: #2a3942;
+}
+
+/* Scrollbar sutil */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--wa-scrollbar) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: var(--wa-scrollbar);
+    border-radius: 8px;
+}

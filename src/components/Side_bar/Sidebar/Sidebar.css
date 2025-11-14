@@ -1,0 +1,277 @@
+/* ============================================================
+   🌙 SIDEBAR — WHATSAPP STYLE
+   ============================================================ */
+.wa-sidebar {
+    width: 400px;
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    background: #111b21;
+    border-right: 1px solid #2a3942;
+    position: relative;
+}
+
+/* ============================================================
+   📌 SIDEBAR HEADER
+   ============================================================ */
+.wa-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #202c33;
+    border-bottom: 1px solid #2a3942;
+}
+
+.user-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    flex: 1;
+}
+
+.user-profile-header:hover {
+    background: #2a3942;
+}
+
+/* === AVATAR === */
+.user-avatar-small {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #00a884;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-initials {
+    color: #111b21;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+/* === TEXTO DE USUARIO === */
+.user-info-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-name {
+    color: #e9edef;
+    font-weight: 500;
+    font-size: 15px;   /* 🔥 font bajado como pediste */
+}
+
+.user-status {
+    color: #8696a0;
+    font-size: 12px;  /* 🔥 más pequeño */
+}
+
+/* === ACTIONS === */
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.header-actions button {
+    background: none;
+    border: none;
+    color: #8696a0;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 6px;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.header-actions button:hover {
+    background: #2a3942;
+    color: #e9edef;
+}
+
+/* BOTONES: INVITAR Y SALIR */
+.new-invite-btn {
+    padding: 7px 14px;
+    background: #00a884;
+    color: #111b21;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.wa-sidebar-logout {
+    padding: 7px 14px;
+    background: #2a3942;
+    color: #e9edef;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* ============================================================
+   📌 TABS
+   ============================================================ */
+.wa-sidebar-tabs {
+    display: flex;
+    background: #202c33;
+    border-bottom: 1px solid #2a3942;
+}
+
+.wa-sidebar-tabs button {
+    flex: 1;
+    padding: 14px 20px;
+    background: none;
+    border: none;
+    color: #8696a0;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+}
+
+.wa-sidebar-tabs button:hover {
+    background: #2a3942;
+    color: #e9edef;
+}
+
+.wa-sidebar-tabs button.active {
+    color: #00a884;
+    font-weight: 500;
+}
+
+.wa-sidebar-tabs button.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #00a884;
+}
+
+/* ============================================================
+   📌 CONTENT
+   ============================================================ */
+.wa-sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 4px;
+}
+
+/* ============================================================
+   📌 FLOAT NEW BUTTON (LEFT SIDE)
+   ============================================================ */
+.wa-sidebar-new {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #00a884;
+    border: none;
+    color: #111b21;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wa-sidebar-new:hover {
+    background: #06cf9c;
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+/* + symbol */
+.wa-sidebar-new::before {
+    content: '+';
+    font-size: 22px;
+    font-weight: 300;
+    transform: translateY(-1px);
+}
+
+/* ============================================================
+   📌 GROUP LIST (LO QUE TE FALTABA)
+   ============================================================ */
+.group-list-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #2a3942;
+    transition: background 0.2s;
+}
+
+.group-list-item:hover {
+    background: #202c33;
+}
+
+.group-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00a884;
+    color: #111;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.group-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: #e9edef;
+}
+
+/* ============================================================
+   📌 SCROLLBAR
+   ============================================================ */
+.wa-sidebar-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.wa-sidebar-content::-webkit-scrollbar-track {
+    background: #1f2c33;
+}
+
+.wa-sidebar-content::-webkit-scrollbar-thumb {
+    background: #8696a0;
+    border-radius: 4px;
+}
+
+.wa-sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: #aebac1;
+}
+
+/* Para evitar que el botón flotante tape elementos */
+.wa-sidebar-content {
+    padding-bottom: 70px;
+}
+
+

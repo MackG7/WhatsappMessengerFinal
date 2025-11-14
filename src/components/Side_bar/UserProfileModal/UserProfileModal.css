@@ -1,0 +1,235 @@
+.user-profile-modal {
+    width: 440px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #2a3942;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #8696a0;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.close-btn:hover {
+    background: #2a3942;
+    color: #e9edef;
+}
+
+/* Avatar Section */
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #00a884, #25d366);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111b21;
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    text-align: center;
+}
+
+.avatar-overlay span:first-child {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.avatar-container:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.upload-loading {
+    color: #00a884;
+    font-size: 14px;
+}
+
+/* User Info */
+.user-info {
+    margin-bottom: 20px;
+}
+
+.info-item {
+    margin-bottom: 20px;
+}
+
+.info-label {
+    font-size: 14px;
+    color: #8696a0;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.info-value {
+    color: #e9edef;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.email-value {
+    color: #00a884;
+    font-weight: 500;
+}
+
+.info-note {
+    font-size: 12px;
+    color: #8696a0;
+    font-style: italic;
+}
+
+.bio-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 12px;
+    color: #8696a0;
+    margin-top: 4px;
+}
+
+.char-counter.warning {
+    color: #ffa500;
+}
+
+.char-counter.error {
+    color: #ff4444;
+}
+
+/* Profile Stats */
+.profile-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 25px 0;
+    padding: 20px;
+    background: #1f2c33;
+    border-radius: 12px;
+    border: 1px solid #2a3942;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.stat-number {
+    font-size: 18px;
+    font-weight: 600;
+    color: #00a884;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #8696a0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Success Message */
+.success-message {
+    background: #00a88420;
+    border: 1px solid #00a88460;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #00a884;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-height: 700px) {
+    .user-profile-modal {
+        max-height: 90vh;
+    }
+    
+    .avatar-container {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .avatar-placeholder {
+        font-size: 36px;
+    }
+}
+
+/* Scrollbar */
+.user-profile-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.user-profile-modal::-webkit-scrollbar-track {
+    background: #1f2c33;
+    border-radius: 3px;
+}
+
+.user-profile-modal::-webkit-scrollbar-thumb {
+    background: #8696a0;
+    border-radius: 3px;
+}
+
+.user-profile-modal::-webkit-scrollbar-thumb:hover {
+    background: #aebac1;
+}
+
+.upload-info {
+    text-align: center;
+    margin-top: 8px;
+    color: #8696a0;
+    font-size: 12px;
+}

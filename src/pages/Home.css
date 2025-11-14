@@ -1,0 +1,214 @@
+.flex {
+    display: flex;
+}
+
+.h-screen {
+    height: 100vh;
+}
+
+.bg-\[\#111b21\] {
+    background-color: #111b21;
+}
+
+.text-gray-200 {
+    color: #e5e7eb;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+/* LÍNEA SEPARADORA */
+.border-r {
+    border-right-width: 1px;
+}
+
+.border-\[\#2a3942\] {
+    border-color: #2a3942;
+}
+
+.w-\[400px\] {
+    width: 400px;
+}
+
+.min-w-\[400px\] {
+    min-width: 400px;
+}
+
+/* PANTALLA DE BIENVENIDA */
+.welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: linear-gradient(135deg, #111b21 0%, #0b141a 100%);
+    padding: 0px;
+    text-align: center;
+}
+
+/* LOGO GRANDE DE WHATSAPP EN GRIS */
+.whatsapp-logo-large {
+    margin-bottom: 40px;
+    animation: floatLogo 3s ease-in-out infinite;
+}
+
+.wa-logo-svg {
+    filter: drop-shadow(0 0 20px rgba(134, 150, 160, 0.3)); /* Gris en lugar de verde */
+    transition: all 0.3s ease;
+    opacity: 0.8; /* Un poco de transparencia para suavizar */
+}
+
+.wa-logo-svg:hover {
+    filter: drop-shadow(0 0 30px rgba(134, 150, 160, 0.5));
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+/* CONTENIDO DE BIENVENIDA */
+.welcome-content {
+    max-width: 500px;
+}
+
+.welcome-title {
+    font-size: 32px;
+    font-weight: 300;
+    color: #e9edef;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+
+.welcome-subtitle {
+    font-size: 16px;
+    color: #8696a0; /* Gris de WhatsApp */
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+/* LISTA DE CARACTERÍSTICAS */
+.welcome-features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #aebac1; /* Gris más claro */
+    font-size: 14px;
+    padding: 12px 20px;
+    background: rgba(134, 150, 160, 0.1); /* Fondo gris sutil */
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(134, 150, 160, 0.2);
+}
+
+.feature-item:hover {
+    background: rgba(134, 150, 160, 0.15);
+    transform: translateX(5px);
+    border-color: rgba(134, 150, 160, 0.3);
+}
+
+.feature-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+/* PIE DE PÁGINA */
+.welcome-footer {
+    border-top: 1px solid #2a3942;
+    padding-top: 20px;
+}
+
+.footer-text {
+    font-size: 13px;
+    color: #8696a0; /* Gris de WhatsApp */
+    line-height: 1.4;
+}
+
+/* ANIMACIONES */
+@keyframes floatLogo {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* EFECTO DE BRILLO SUTIL EN EL LOGO GRIS */
+.wa-logo-svg {
+    animation: gentleGlow 4s ease-in-out infinite;
+}
+
+@keyframes gentleGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 15px rgba(134, 150, 160, 0.2));
+    }
+    50% {
+        filter: drop-shadow(0 0 25px rgba(134, 150, 160, 0.4));
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .welcome-screen {
+        padding: 20px;
+    }
+    
+    .whatsapp-logo-large {
+        margin-bottom: 30px;
+    }
+    
+    .wa-logo-svg {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .welcome-title {
+        font-size: 24px;
+    }
+    
+    .welcome-subtitle {
+        font-size: 14px;
+    }
+    
+    .feature-item {
+        font-size: 13px;
+        padding: 10px 16px;
+    }
+}
+
+/* Para pantallas muy grandes */
+@media (min-width: 1400px) {
+    .welcome-screen {
+        padding: 60px;
+    }
+    
+    .whatsapp-logo-large {
+        margin-bottom: 50px;
+    }
+    
+    .wa-logo-svg {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .welcome-title {
+        font-size: 36px;
+    }
+}
+

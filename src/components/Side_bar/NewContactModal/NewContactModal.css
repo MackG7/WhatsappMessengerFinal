@@ -1,0 +1,84 @@
+.wa-modal-overlay{
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    backdrop-filter: blur(3px);
+    background:rgba(0,0,0,.45);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.wa-modal{
+    width:350px;
+    background:#111b21;
+    border-radius:9px;
+    border:1px solid #2a3942;
+    padding:18px;
+}
+
+.wa-modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:17px;
+    font-weight:600;
+    color:#e9edef;
+    margin-bottom:12px;
+}
+
+.wa-modal-close{
+    background:none;
+    border:none;
+    color:#8696a0;
+    cursor:pointer;
+}
+
+.wa-modal-error{
+    color:#d53b3b;
+    font-size:14px;
+    margin-bottom:10px;
+    text-align:center;
+}
+
+.wa-modal-form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.wa-modal-form label{
+    color:#8696a0;
+    font-size:13px;
+}
+
+.wa-modal-input{
+    padding:9px 12px;
+    border-radius:6px;
+    border:1px solid #2a3942;
+    background:#202c33;
+    color:#e9edef;
+    outline:none;
+}
+
+.wa-modal-confirm{
+    background:#00a884;
+    border:none;
+    padding:10px 14px;
+    color:#111b21;
+    font-weight:600;
+    border-radius:7px;
+    cursor:pointer;
+    margin-top:12px;
+}
+
+.wa-modal-info {
+    text-align: center;
+    color: #8696a0;
+    font-size: 12px;
+    margin: 10px 0;
+    font-style: italic;
+    padding: 8px;
+    background: rgba(134, 150, 160, 0.1);
+    border-radius: 6px;
+}

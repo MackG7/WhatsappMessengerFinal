@@ -1,0 +1,108 @@
+.wa-bubble-row {
+    display: flex;
+    margin: 6px 0;
+    width: 100%;
+}
+
+.wa-bubble-row.mine {
+    justify-content: flex-end;
+}
+
+.wa-bubble-row.theirs {
+    justify-content: flex-start;
+}
+
+.wa-bubble {
+    max-width: 85%; /* Aumentado de 70% a 85% - MÁS ANCHO */
+    min-width: 120px; /* Ancho mínimo para mensajes cortos */
+    padding: 12px 14px 8px 14px; /* Más padding */
+    border-radius: 10px;
+    font-size: 15px;
+    line-height: 1.5; /* Mejor interlineado */
+    word-break: break-word;
+    position: relative;
+    display: inline-block;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    animation: bubbleIn 0.2s ease-in-out;
+}
+
+.wa-bubble.mine {
+    background-color: #005c4b;
+    color: #e9edef;
+    border-bottom-right-radius: 0;
+    margin-left: auto; /* Empuja hacia la derecha */
+}
+
+.wa-bubble.theirs {
+    background-color: #202c33;
+    color: #e9edef;
+    border-bottom-left-radius: 0;
+    margin-right: auto; /* Empuja hacia la izquierda */
+}
+
+/* Para mensajes muy largos, permitir que crezcan más */
+.wa-bubble:not(.mine) {
+    max-width: 80%; /* Los mensajes de otros un poco menos ancho */
+}
+
+.wa-bubble.mine {
+    max-width: 85%; /* Tus mensajes más anchos */
+}
+
+/* texto */
+.wa-bubble-text {
+    margin-bottom: 6px;
+    white-space: pre-wrap; /* Mantener saltos de línea */
+    overflow-wrap: break-word; /* Romper palabras largas */
+}
+
+/* pie de burbuja (hora + checks) */
+.wa-bubble-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px; /* Más espacio entre hora y checks */
+    color: #aebac1;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+/* checks */
+.wa-checks {
+    display: flex;
+    align-items: center;
+    color: #aebac1;
+    transform: translateY(1px);
+}
+
+.wa-checks.read {
+    color: #53bdeb; /* azul WhatsApp */
+}
+
+/* animación */
+@keyframes bubbleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0.4;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Para mensajes extremadamente largos */
+.wa-bubble.long-message {
+    max-width: 90%; /* Aún más ancho para mensajes largos */
+}
+
+/* Responsive: en pantallas grandes, permitir más ancho */
+@media (min-width: 1400px) {
+    .wa-bubble.mine {
+        max-width: 75%; /* En pantallas muy grandes, un poco menos ancho para mejor legibilidad */
+    }
+    
+    .wa-bubble.theirs {
+        max-width: 70%;
+    }
+}
