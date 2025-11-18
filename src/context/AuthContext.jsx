@@ -9,7 +9,6 @@ export function AuthProvider({ children }) {
     const [authLoading, setAuthLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Verificar si hay token en localStorage al cargar
     useEffect(() => {
         const checkAuth = async () => {
             const token = localStorage.getItem("token");
@@ -19,7 +18,7 @@ export function AuthProvider({ children }) {
                 try {
                     setUser(JSON.parse(userData));
                     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-                    await verifyToken(token);
+                    await verifyToken();
                 } catch (error) {
                     console.error("Error checking auth:", error);
                     logout();
@@ -31,9 +30,9 @@ export function AuthProvider({ children }) {
         checkAuth();
     }, []);
 
-    const verifyToken = async (token) => {
+    const verifyToken = async () => {
         try {
-            await api.get("/auth/verify");
+            await api.get("auth/verify");
         } catch (error) {
             if (error.response?.status !== 404) {
                 console.error("Token verification failed:", error);
@@ -46,8 +45,8 @@ export function AuthProvider({ children }) {
         try {
             setAuthLoading(true);
             setError(null);
-            
-            const { data } = await api.post("/auth/register", { 
+
+            const { data } = await api.post("auth/register", { 
                 username, 
                 email, 
                 password 
@@ -74,13 +73,32 @@ export function AuthProvider({ children }) {
 
             console.log("🔐 Intentando login con:", { email });
 
-            const { data } = await api.post("/auth/login", { email, password });
+            const { data } = await api.post("auth/login", { email, password });
 
-            if (!data.success || data.message?.includes("incorrectos")) {
+            // 👉 EMAIL NO EXISTE → ir a REGISTRO
+            if (data.message === "email_not_found") {
+                console.warn("📌 Email no existe. Redirigiendo a registro...");
+                window.location.href = `/register?email=${encodeURIComponent(email)}`;
+                return { success: false, redirect: true };
+            }
+
+            // 👉 CONTRASEÑA INCORRECTA
+            if (data.message === "wrong_password") {
+                throw new Error("La contraseña es incorrecta");
+            }
+
+            // 👉 EMAIL NO VERIFICADO
+            if (data.message === "email_not_verified") {
+                throw new Error("Tu email no está verificado. Revisa tu bandeja o spam.");
+            }
+
+            if (!data.success) {
                 throw new Error(data.message || "Error en el login");
             }
+
             console.log("✅ Login exitoso:", data);
 
+            // Guardar en storage
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -100,10 +118,9 @@ export function AuthProvider({ children }) {
     };
 
     const updateUser = (userData) => {
-    setUser(prev => ({ ...prev, ...userData }));
-    
-    localStorage.setItem('user', JSON.stringify({ ...user, ...userData }));
-};
+        setUser(prev => ({ ...prev, ...userData }));
+        localStorage.setItem('user', JSON.stringify({ ...user, ...userData }));
+    };
 
     const logout = () => {
         localStorage.removeItem("token");

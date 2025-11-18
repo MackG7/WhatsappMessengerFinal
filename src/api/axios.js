@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Configuración automática para desarrollo/producción
+
 const isDevelopment = window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1';
 
@@ -13,13 +13,13 @@ console.log(` Conectando a: ${API_BASE_URL}`);
 const api = axios.create({
     baseURL: API_BASE_URL,
     withCredentials: true,
-    timeout: 10000,
+    timeout: 30000, 
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
-// Interceptor para agregar el token automáticamente
+
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -36,7 +36,7 @@ api.interceptors.request.use(
     }
 );
 
-// Interceptor para manejar respuestas y errores
+
 api.interceptors.response.use(
     (response) => {
         console.log(`API Success: ${response.status} ${response.config.url}`);
@@ -46,7 +46,7 @@ api.interceptors.response.use(
         console.error(` API Error: ${error.response?.status || 'NO STATUS'} ${error.config?.url}`, error.message);
 
         if (error.response?.status === 401) {
-            // Token inválido o expirado - limpiar y redirigir
+
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = '/login';
