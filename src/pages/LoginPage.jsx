@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import "../styles/global.css";
+import "../styles/auth.css";
 import { FaWhatsapp } from "react-icons/fa";
 
 export default function LoginPage() {
@@ -47,7 +47,7 @@ export default function LoginPage() {
                     <h1>WhatsApp</h1>
                 </div>
 
-                <h2>Iniciar sesión</h2>
+                <h2 className="text-login">Iniciar sesión</h2>
                 <p className="auth-subtitle">Bienvenido de vuelta</p>
 
                 {error && <div className="error-message">{error}</div>}

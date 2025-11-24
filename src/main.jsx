@@ -6,6 +6,10 @@ import { AuthProvider } from "./context/AuthContext";
 import { ChatProvider } from "./context/chatContext";
 import "./styles/theme.css";
 import "./styles/global.css";
+import "./styles/layout.css";
+import "./styles/responsive.css";
+
+
 
 
 

@@ -49,3 +49,26 @@
     border-radius: 6px;
     margin-bottom: 12px;
 }
+
+.auth-switch {
+    color: gray;
+    padding-top: 10px;
+}
+
+.auth-subtitle {
+    color: gray;
+    padding: 10px;
+}
+
+.auth-logo {
+    color: gray;
+}
+
+.text-login{
+    color: gray;
+}
+
+.text-register {
+    color: gray;
+}
+

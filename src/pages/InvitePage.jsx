@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import "../styles/global.css";
+import "../styles/auth.css";
 
 export default function InvitePage(){
     const [inviteLink, setInviteLink] = useState("");

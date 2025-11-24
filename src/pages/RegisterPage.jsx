@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import "../styles/global.css";
+import "../styles/auth.css";
 import { FaWhatsapp } from "react-icons/fa";
 
 export default function RegisterPage() {
@@ -46,7 +46,7 @@ export default function RegisterPage() {
                     <h1>WhatsApp</h1>
                 </div>
 
-                <h2>Crear cuenta</h2>
+                <h2 className="text-register">Crear cuenta</h2>
                 <p className="auth-subtitle">
                     Regístrate para comenzar a chatear
                 </p>
