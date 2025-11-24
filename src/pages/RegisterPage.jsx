@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/global.css";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -38,14 +39,17 @@ export default function RegisterPage() {
     return (
         <div className="auth-container">
             <div className="auth-box">
+
                 {/* LOGO DE WHATSAPP */}
                 <div className="auth-logo">
-                    <div className="whatsapp-logo">💬</div>
+                    <FaWhatsapp size={60} color="#6c6c6c" />
                     <h1>WhatsApp</h1>
                 </div>
 
                 <h2>Crear cuenta</h2>
-                <p className="auth-subtitle">Regístrate para comenzar a chatear</p>
+                <p className="auth-subtitle">
+                    Regístrate para comenzar a chatear
+                </p>
 
                 {error && <div className="error-message">{error}</div>}
 

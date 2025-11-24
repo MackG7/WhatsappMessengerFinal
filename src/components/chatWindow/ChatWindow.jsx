@@ -1,4 +1,4 @@
-import "./ChatWindow.css";
+import "../../styles/chat.css";
 import { useChat } from "../../context/chatContext";
 import MessageBubble from "../MessageBubble/MessageBubble";
 import ChatInput from "../chatInput/ChatInput";

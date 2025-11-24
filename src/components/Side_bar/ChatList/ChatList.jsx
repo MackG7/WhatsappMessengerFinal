@@ -1,4 +1,4 @@
-import "./ChatList.css";
+import "../../styles/chat.css";
 import { useChat } from "../../../context/chatContext.jsx";
 import { useState } from "react";
 import DeleteConfirmationModal from "../../DeleteConfirmationModal/DeleteConfirmationModal.jsx";

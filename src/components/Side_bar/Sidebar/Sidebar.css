@@ -72,12 +72,12 @@
 .user-name {
     color: #e9edef;
     font-weight: 500;
-    font-size: 15px;   /* 🔥 font bajado como pediste */
+    font-size: 15px;
 }
 
 .user-status {
     color: #8696a0;
-    font-size: 12px;  /* 🔥 más pequeño */
+    font-size: 12px;
 }
 
 /* === ACTIONS === */
@@ -175,6 +175,7 @@
     flex: 1;
     overflow-y: auto;
     padding: 0 4px;
+    padding-bottom: 70px; /* evita que tape el botón flotante */
 }
 
 /* ============================================================
@@ -193,7 +194,7 @@
     font-size: 20px;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: all 0.2s;
+    transition: 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -205,7 +206,6 @@
     box-shadow: 0 6px 16px rgba(0,0,0,0.4);
 }
 
-/* + symbol */
 .wa-sidebar-new::before {
     content: '+';
     font-size: 22px;
@@ -214,7 +214,7 @@
 }
 
 /* ============================================================
-   📌 GROUP LIST (LO QUE TE FALTABA)
+   📌 GROUP LIST
    ============================================================ */
 .group-list-item {
     display: flex;
@@ -268,10 +268,3 @@
 .wa-sidebar-content::-webkit-scrollbar-thumb:hover {
     background: #aebac1;
 }
-
-/* Para evitar que el botón flotante tape elementos */
-.wa-sidebar-content {
-    padding-bottom: 70px;
-}
-
-

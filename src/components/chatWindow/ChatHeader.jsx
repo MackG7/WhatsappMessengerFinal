@@ -1,4 +1,4 @@
-import "./ChatHeader.css";
+import "../../styles/chat.css";
 import { useChat } from "../../context/chatContext";
 import { useAuth } from "../../context/AuthContext";
 

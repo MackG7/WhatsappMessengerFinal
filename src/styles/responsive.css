@@ -1,0 +1,45 @@
+/* Sidebar */
+@media (max-width: 1100px) {
+    .wa-sidebar {
+        width: var(--sidebar-md);
+        min-width: var(--sidebar-md);
+    }
+}
+
+@media (max-width: 850px) {
+    .wa-sidebar {
+        width: var(--sidebar-sm);
+        min-width: var(--sidebar-sm);
+    }
+}
+
+@media (max-width: 600px) {
+    .wa-sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: var(--mobile-drawer);
+        height: 100%;
+        z-index: 1000;
+    }
+
+    .wa-sidebar.open {
+        left: 0;
+    }
+
+    .wa-chat-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+}
+
+/* Chat header wrap */
+@media (max-width: 1100px) and (min-width: 600px) {
+    .wa-chat-header {
+        flex-wrap: wrap;
+        height: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}

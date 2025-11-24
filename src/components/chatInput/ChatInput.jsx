@@ -1,4 +1,4 @@
-import "./ChatInput.css";
+import "../../styles/chat.css";
 import { useState } from "react";
 import { useChat } from "../../context/chatContext";
 import { Send } from "lucide-react";
