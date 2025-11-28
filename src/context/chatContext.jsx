@@ -13,9 +13,6 @@ export function ChatProvider({ children }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    /* ====================================
-       RESET
-    ==================================== */
     const resetChatState = useCallback(() => {
         setGroups([]);
         setSelectedChat(null);
@@ -23,17 +20,11 @@ export function ChatProvider({ children }) {
         setError(null);
     }, []);
 
-    /* ====================================
-       LOAD INITIAL
-    ==================================== */
     useEffect(() => {
         if (isAuthenticated && token) loadGroups();
         else resetChatState();
     }, [isAuthenticated, token, resetChatState]);
 
-    /* ====================================
-       LOAD GROUPS
-    ==================================== */
     const loadGroups = async () => {
         try {
             const res = await api.get("/groups/my", {
@@ -45,9 +36,6 @@ export function ChatProvider({ children }) {
         }
     };
 
-    /* ====================================
-       LOAD MESSAGES (auto detect type)
-    ==================================== */
     const loadMessages = useCallback(async () => {
         if (!selectedChat) return;
         const chatId = selectedChat._id;
@@ -55,7 +43,6 @@ export function ChatProvider({ children }) {
         try {
             setLoading(true);
 
-            /* DIRECT */
             if (selectedChat.type === "direct") {
                 const otherUser = selectedChat.participants.find(
                     (p) => p !== user._id
@@ -69,7 +56,6 @@ export function ChatProvider({ children }) {
                 return;
             }
 
-            /* GROUP */
             if (selectedChat.type === "group") {
                 const res = await api.get(`/group-message/${chatId}/messages`, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -86,9 +72,6 @@ export function ChatProvider({ children }) {
         }
     }, [selectedChat, token, user?._id]);
 
-    /* ========================================
-       DIRECT CHAT
-    ========================================= */
     const startDirectChat = async (otherUserId) => {
         try {
             await api.get(`/direct-message/${otherUserId}`, {
@@ -103,8 +86,6 @@ export function ChatProvider({ children }) {
 
             setSelectedChat(chat);
             setMessages([]);
-
-            // Esperamos a que se actualice selectedChat
             setTimeout(() => loadMessages(), 50);
 
             return chat;
@@ -114,9 +95,6 @@ export function ChatProvider({ children }) {
         }
     };
 
-    /* ========================================
-       SELECT GROUP
-    ========================================= */
     const selectGroup = async (group) => {
         try {
             const groupId = group._id || group;
@@ -145,9 +123,6 @@ export function ChatProvider({ children }) {
         return null;
     };
 
-    /* ========================================
-       SEND MESSAGE
-    ========================================= */
     const sendMessage = async (text) => {
         if (!selectedChat?._id) return { success: false };
 
@@ -173,7 +148,6 @@ export function ChatProvider({ children }) {
                 }
             }
 
-            /* GROUP */
             if (selectedChat.type === "group") {
                 const res = await api.post(
                     `/group-message/${selectedChat._id}/message`,
@@ -194,9 +168,6 @@ export function ChatProvider({ children }) {
         return { success: false };
     };
 
-    /* ========================================
-       EXPORT
-    ========================================= */
     return (
         <ChatContext.Provider
             value={{

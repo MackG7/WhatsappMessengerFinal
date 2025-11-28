@@ -5,19 +5,40 @@ import "../styles/auth.css";
 
 export default function InvitePage(){
     const [inviteLink, setInviteLink] = useState("");
+    const [inviteEmail, setInviteEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
 
     const createInvite = async () => {
+        if (!inviteEmail) {
+            alert("Por favor ingresa un email");
+            return;
+        }
+
+        // Validación básica de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(inviteEmail)) {
+            alert("Por favor ingresa un email válido");
+            return;
+        }
+
         try {
             setLoading(true);
-            const res = await api.post("/contacts/invite");
+            const res = await api.post("/contacts/invite", { 
+                email: inviteEmail 
+            });
+            
             const token = res.data.data.token;
             const link = `${window.location.origin}/register?ref=${token}`;
             setInviteLink(link);
+            
+            // Si tu backend ya envía el email, mostramos éxito
+            setEmailSent(true);
+            
         } catch (error) {
             console.error("Error creating invite:", error);
-            alert("Error al generar el enlace de invitación");
+            alert("Error al generar y enviar la invitación");
         } finally {
             setLoading(false);
         }
@@ -51,28 +72,48 @@ export default function InvitePage(){
                     <h1>WhatsApp</h1>
                 </div>
 
-                <h2>Invitar Contacto</h2>
-                <p className="auth-subtitle">Comparte WhatsApp con tus amigos</p>
+                <h2 className="invite-contact">Invitar Contacto</h2>
+                <p className="auth-subtitle">Invita a tus amigos por email</p>
 
                 <div className="invite-content">
+                    {/* Campo para ingresar el email */}
+                    <div className="input-group">
+                        <label htmlFor="inviteEmail">Email del invitado:</label>
+                        <input
+                            id="inviteEmail"
+                            type="email"
+                            value={inviteEmail}
+                            onChange={(e) => setInviteEmail(e.target.value)}
+                            placeholder="ejemplo@email.com"
+                            className="auth-input"
+                            disabled={loading}
+                        />
+                    </div>
+
                     <button 
                         onClick={createInvite}
-                        disabled={loading}
+                        disabled={loading || !inviteEmail}
                         className="auth-button invite-button"
                     >
                         {loading ? (
                             <>
                                 <div className="spinner"></div>
-                                Generando...
+                                Enviando invitación...
                             </>
                         ) : (
-                            "Generar Link de invitación"
+                            "Enviar invitación por email"
                         )}
                     </button>
 
+                    {emailSent && (
+                        <div className="success-message">
+                            ✅ Invitación enviada a {inviteEmail}
+                        </div>
+                    )}
+
                     {inviteLink && (
                         <div className="invite-link-section">
-                            <p className="invite-instruction">Comparte este enlace:</p>
+                            <p className="invite-instruction">O comparte este enlace manualmente:</p>
                             <div className="link-container">
                                 <input 
                                     value={inviteLink} 

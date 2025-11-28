@@ -16,7 +16,7 @@ export default function Sidebar({ onClose }) {
     const [showGroupModal, setShowGroupModal] = useState(false);
     const [showProfileModal, setShowProfileModal] = useState(false);
 
-    const { groups, loadGroups } = useChat();
+    const { groups, loadGroups, selectGroup } = useChat();
     const { user, logout } = useAuth();
 
     useEffect(() => {
@@ -28,8 +28,8 @@ export default function Sidebar({ onClose }) {
             const resContacts = await api.get("/contacts");
             setContacts(resContacts.data.data || []);
             await loadGroups();
-        } catch (err) {
-            console.error("Error loading sidebar:", err);
+        } catch (error) {
+            console.error("Error loading sidebar:", error);
         }
     };
 
@@ -41,15 +41,26 @@ export default function Sidebar({ onClose }) {
 
     const handleSidebarAction = () => {
         if (window.innerWidth < 751 && onClose) {
-            onClose();
+            setTimeout(() => {
+                onClose();
+            }, 300);
         }
+    };
+
+    const handleGroupSelect = async (group) => {
+        await selectGroup(group);
+        handleSidebarAction();
+    };
+
+    const handleContactSelect = async (contact) => {
+        console.log("Contacto seleccionado:", contact);
+        handleSidebarAction();
     };
 
     return (
         <aside className="wa-sidebar">
             <div className="wa-sidebar-header">
                 <div className="wa-sidebar-header-left">
-                    {/* BOTÓN CERRAR PARA MÓVIL */}
                     <button className="close-sidebar-btn" onClick={onClose}>
                         ✕
                     </button>
@@ -104,7 +115,6 @@ export default function Sidebar({ onClose }) {
                     className={activeTab === "contacts" ? "active" : ""}
                     onClick={() => {
                         setActiveTab("contacts");
-                        handleSidebarAction();
                     }}
                 >
                     Contactos {contacts.length > 0 && `(${contacts.length})`}
@@ -114,7 +124,6 @@ export default function Sidebar({ onClose }) {
                     className={activeTab === "groups" ? "active" : ""}
                     onClick={() => {
                         setActiveTab("groups");
-                        handleSidebarAction();
                     }}
                 >
                     Grupos {groups?.length > 0 && `(${groups.length})`}
@@ -125,14 +134,15 @@ export default function Sidebar({ onClose }) {
                 {activeTab === "contacts" && (
                     <ContactList
                         contacts={contacts}
-                        onContactSelect={handleSidebarAction}
+                        onContactSelect={handleContactSelect}
                     />
                 )}
 
                 {activeTab === "groups" && (
                     <GroupList
                         groups={groups || []}
-                        onGroupSelect={handleSidebarAction}
+                        onGroupSelect={handleGroupSelect} 
+                        onUpdate={loadData}
                     />
                 )}
             </div>

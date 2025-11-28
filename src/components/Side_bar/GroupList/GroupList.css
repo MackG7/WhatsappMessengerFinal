@@ -11,9 +11,10 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 14px;
+    padding: 12px 16px;
     cursor: pointer;
     transition: background .2s ease;
+    border-bottom: 1px solid #1f2c33;
 }
 
 .group-item:hover {
@@ -21,13 +22,13 @@
 }
 
 .group-item.active {
-    background-color: #202c33;
+    background-color: #2a3942;
 }
 
-/* AVATAR DEL GRUPO */
+/* AVATAR DEL GRUPO - GRIS */
 .group-avatar {
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     background-color: #2a3942;
     border-radius: 50%;
     display: flex;
@@ -44,17 +45,20 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 2px;
+    min-width: 0;
 }
 
-/* FILA SUPERIOR (NOMBRE + TACHO) */
+/* FILA SUPERIOR (NOMBRE + BOTONES) */
 .wa-group-top-row {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 🔥 ALINEA TEXTO Y TACHO EN UNA FILA */
+    justify-content: space-between;
+    gap: 12px;
     width: 100%;
 }
 
-/* Nombre */
+/* Nombre del grupo */
 .wa-group-name {
     color: #e9edef;
     font-size: 16px;
@@ -62,29 +66,140 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
 }
 
-/* Miembros */
+/* Contenedor de botones */
+.group-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+/* Información de miembros - DEBAJO del nombre */
 .wa-group-preview {
     color: #8696a0;
     font-size: 13px;
 }
 
-/* ACCIONES — solo 1 botón */
-.group-actions {
-    display: none; /* NO SE USA MÁS */
+/* Botón agregar miembros */
+.btn-add-members {
+    background: none;
+    border: none;
+    color: #8696a0;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    opacity: 0.7;
 }
 
-/* Botón borrar / salir */
+.btn-add-members:hover {
+    background-color: #2a3942;
+    color: #00a884;
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Botón eliminar/salir */
 .btn-delete-group {
     background: none;
     border: none;
     color: #8696a0;
     cursor: pointer;
-    font-size: 20px;
-    padding: 4px;
+    font-size: 16px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    opacity: 0.7;
 }
 
 .btn-delete-group:hover {
+    background-color: #2a3942;
     color: #ff6b6b;
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Estado de admin */
+.admin-badge {
+    background: #00a884;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 6px;
+}
+
+/* GRUPOS VACÍOS */
+.empty-groups {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 40px 20px;
+    color: #8696a0;
+}
+
+.empty-groups p {
+    margin: 0;
+}
+
+.empty-groups .empty-subtitle {
+    font-size: 14px;
+    margin-top: 8px;
+    color: #667781;
+}
+
+/* Mejoras responsive */
+@media (max-width: 900px) {
+    .group-item {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+    
+    .group-avatar {
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
+    }
+    
+    .wa-group-name {
+        font-size: 15px;
+    }
+    
+    .btn-add-members,
+    .btn-delete-group {
+        font-size: 15px;
+        padding: 5px 7px;
+    }
+}
+
+@media (max-width: 600px) {
+    .group-item {
+        padding: 8px 12px;
+    }
+    
+    .group-avatar {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .wa-group-name {
+        font-size: 14px;
+    }
+    
+    .wa-group-preview {
+        font-size: 12px;
+    }
+    
+    .group-actions {
+        gap: 2px;
+    }
 }

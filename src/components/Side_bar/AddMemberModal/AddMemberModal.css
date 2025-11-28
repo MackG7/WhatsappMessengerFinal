@@ -1,0 +1,66 @@
+
+.users-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #3d4b52;
+    transition: background 0.2s;
+}
+
+.user-item:hover {
+    background: #1f2c33;
+}
+
+.user-item.selected {
+    background: #005c4b;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: #00a884;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.user-email {
+    font-size: 12px;
+    color: #8696a0;
+}
+
+.no-users {
+    text-align: center;
+    padding: 40px 20px;
+    color: #8696a0;
+}
+
+/* El resto del CSS se mantiene igual */

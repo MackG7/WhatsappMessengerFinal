@@ -21,7 +21,6 @@ export default function NewContactModal({ onClose, onSuccess }) {
 
             console.log("🔍 Buscando usuario con email:", email.trim());
 
-            // 1. PRIMERO BUSCAR EL USUARIO
             const searchRes = await api.get(`/users/search/email?email=${email.trim()}`);
             
             console.log("✅ Resultado de búsqueda:", searchRes.data);
@@ -32,17 +31,17 @@ export default function NewContactModal({ onClose, onSuccess }) {
 
             const foundUser = searchRes.data.data;
 
-            // 2. VERIFICAR QUE NO SEA EL MISMO USUARIO
             if (foundUser._id === user?._id) {
                 throw new Error("No puedes agregarte a ti mismo como contacto");
             }
 
-            // 3. VERIFICAR QUE NO SEA UN CONTACTO EXISTENTE
+            // Verificar si ya es contacto
             try {
                 const contactsRes = await api.get("/contacts");
                 const existingContact = contactsRes.data.data?.find(contact => 
                     contact.contactUser?._id === foundUser._id || 
-                    contact._id === foundUser._id
+                    contact._id === foundUser._id ||
+                    contact.email === foundUser.email
                 );
                 
                 if (existingContact) {
@@ -52,16 +51,16 @@ export default function NewContactModal({ onClose, onSuccess }) {
                 console.log("No se pudieron verificar contactos existentes, continuando...");
             }
 
-            // 4. AGREGAR COMO CONTACTO
             console.log("📤 Agregando contacto...");
+            
             const contactRes = await api.post("/contacts", {
-                contactUserId: foundUser._id,
-                alias: alias.trim() || foundUser.username || foundUser.email
+                email: foundUser.email,       
+                alias: alias.trim() || foundUser.username || foundUser.email  
             });
 
             console.log("✅ Contacto agregado:", contactRes.data);
 
-            if(contactRes.data.success || contactRes.data.ok){
+            if(contactRes.data.success){
                 if(onSuccess) onSuccess();
                 onClose();
             } else {
@@ -73,13 +72,14 @@ export default function NewContactModal({ onClose, onSuccess }) {
             
             let errorMessage = err.response?.data?.message || err.message || "Error agregando contacto";
             
-            // Mensajes más amigables
             if (errorMessage.includes("no encontrado") || errorMessage.includes("no existe")) {
                 errorMessage = "No se encontró ningún usuario registrado con ese email";
             } else if (errorMessage.includes("agregarte a ti mismo")) {
                 errorMessage = "No puedes agregarte a ti mismo como contacto";
             } else if (errorMessage.includes("Ya tienes")) {
                 errorMessage = err.message;
+            } else if (err.response?.status === 400) {
+                errorMessage = "Datos inválidos para agregar contacto";
             }
             
             setError(errorMessage);
@@ -90,7 +90,6 @@ export default function NewContactModal({ onClose, onSuccess }) {
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
-        // Limpiar error cuando el usuario empiece a escribir
         if (error) setError("");
     };
 
@@ -145,7 +144,7 @@ export default function NewContactModal({ onClose, onSuccess }) {
                         className="wa-modal-confirm"
                         disabled={loading || !email.trim()}
                     >
-                        {loading ? "Buscando usuario..." : "Agregar contacto"}
+                        {loading ? "Agregando contacto..." : "Agregar contacto"}
                     </button>
 
                 </form>
