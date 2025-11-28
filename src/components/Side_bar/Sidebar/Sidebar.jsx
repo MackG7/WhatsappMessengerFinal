@@ -1,27 +1,26 @@
 import { useState, useEffect } from "react";
 import "./Sidebar.css";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
-import ChatList from "../ChatList/ChatList";
 import ContactList from "../ContactList/ContactList";
 import GroupList from "../GroupList/GroupList";
 import NewContactModal from "../NewContactModal/NewContactModal";
 import NewGroupModal from "../NewGroupModal/NewGroupModal";
 import api from "../../../api/axios";
 import { useAuth } from "../../../context/AuthContext";
-import { useChat } from "../../../context/chatContext"; 
+import { useChat } from "../../../context/chatContext";
 
 export default function Sidebar({ mobileOpen, setMobileOpen }) {
-    const [activeTab, setActiveTab] = useState("chats");
+    const [activeTab, setActiveTab] = useState("contacts");
     const [contacts, setContacts] = useState([]);
     const [showContactModal, setShowContactModal] = useState(false);
     const [showGroupModal, setShowGroupModal] = useState(false);
     const [showProfileModal, setShowProfileModal] = useState(false);
 
+    // 🔥 YA NO USAMOS chats ni loadChats
+    const { groups, loadGroups } = useChat();
     const { user, logout } = useAuth();
-    const { groups, loadGroups, chats, loadChats } = useChat();
 
     const closeMobileSidebar = () => setMobileOpen(false);
-    const openMobileSidebar = () => setMobileOpen(true);
 
     useEffect(() => {
         loadData();
@@ -31,10 +30,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
         try {
             const resContacts = await api.get("/contacts");
             setContacts(resContacts.data.data || []);
-
-            await loadGroups();
-            await loadChats();
-
+            await loadGroups(); // solo grupos
         } catch (err) {
             console.error("❌ Error loading sidebar:", err);
         }
@@ -51,41 +47,34 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
     };
 
     return (
-        <aside className={`wa-sidebar ${mobileOpen ? "open" : ""}`}>
-            
+        <aside className="wa-sidebar">
+
             {/* HEADER */}
             <div className="wa-sidebar-header">
+                <div className="wa-sidebar-header-left">
+                    <button className="back-btn" onClick={closeMobileSidebar}>←</button>
 
-                {/* BOTÓN VOLVER SOLO EN MÓVIL */}
-                <button 
-                    className="back-btn"
-                    onClick={closeMobileSidebar}
-                >
-                    ←
-                </button>
-
-                {/* Avatar + User info */}
-                <div 
-                    className="user-profile-header"
-                    onClick={() => {
-                        setShowProfileModal(true);
-                        handleSidebarAction();
-                    }}
-                >
-                    <div className="user-avatar-small">
-                        {user?.avatar ? (
-                            <img src={user.avatar} alt="Avatar" className="avatar-img" />
-                        ) : (
-                            <div className="avatar-initials">{getInitials()}</div>
-                        )}
-                    </div>
-                    <div className="user-info-header">
-                        <div className="user-name">{user?.username || user?.email}</div>
-                        <div className="user-status">En línea</div>
+                    <div
+                        className="user-profile-header"
+                        onClick={() => {
+                            setShowProfileModal(true);
+                            handleSidebarAction();
+                        }}
+                    >
+                        <div className="user-avatar-small">
+                            {user?.avatar ? (
+                                <img src={user.avatar} alt="Avatar" className="avatar-img" />
+                            ) : (
+                                <div className="avatar-initials">{getInitials()}</div>
+                            )}
+                        </div>
+                        <div className="user-info-header">
+                            <div className="user-name">{user?.username || user?.email}</div>
+                            <div className="user-status">En línea</div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Acciones */}
                 <div className="header-actions">
                     <button 
                         className="new-invite-btn" 
@@ -111,6 +100,8 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
 
             {/* TABS */}
             <div className="wa-sidebar-tabs">
+                {/* 🔥 ChatList deshabilitado por ahora */}
+                {/* 
                 <button 
                     className={activeTab === "chats" ? "active" : ""} 
                     onClick={() => {
@@ -118,8 +109,9 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                         handleSidebarAction();
                     }}
                 >
-                    Chats {chats?.length > 0 && `(${chats.length})`}
+                    Chats
                 </button>
+                */}
 
                 <button 
                     className={activeTab === "contacts" ? "active" : ""} 
@@ -144,12 +136,6 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
 
             {/* CONTENIDO */}
             <div className="wa-sidebar-content">
-                {activeTab === "chats" && (
-                    <ChatList 
-                        chats={chats || []} 
-                        onChatSelect={handleSidebarAction}
-                    />
-                )}
 
                 {activeTab === "contacts" && (
                     <ContactList 
@@ -175,9 +161,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                             ? setShowContactModal(true)
                             : setShowGroupModal(true);
                     }}
-                >
-                    
-                </button>
+                />
             )}
 
             {/* MODALES */}

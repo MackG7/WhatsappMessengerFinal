@@ -7,264 +7,186 @@ export const ChatContext = createContext();
 export function ChatProvider({ children }) {
     const { user, token, isAuthenticated } = useAuth();
 
-    const [chats, setChats] = useState([]);
     const [groups, setGroups] = useState([]);
     const [selectedChat, setSelectedChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    /* ====================================
+       RESET
+    ==================================== */
     const resetChatState = useCallback(() => {
-        setChats([]);
         setGroups([]);
         setSelectedChat(null);
         setMessages([]);
         setError(null);
     }, []);
 
+    /* ====================================
+       LOAD INITIAL
+    ==================================== */
     useEffect(() => {
-        if (isAuthenticated && token) {
-            loadChats();
-            loadGroups();
-        } else {
-            resetChatState();
-        }
+        if (isAuthenticated && token) loadGroups();
+        else resetChatState();
     }, [isAuthenticated, token, resetChatState]);
 
+    /* ====================================
+       LOAD GROUPS
+    ==================================== */
     const loadGroups = async () => {
         try {
             const res = await api.get("/groups/my", {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `Bearer ${token}` }
             });
-
-            if (res.data.success) {
-                setGroups(res.data.data || []);
-            } else {
-                throw new Error(res.data.message);
-            }
+            if (res.data.success) setGroups(res.data.data || []);
         } catch (err) {
             setError(err.response?.data?.message || err.message);
         }
     };
 
-    const joinGroup = async (groupId) => {
-        try {
-            const res = await api.post(
-                `/groups/${groupId}/add-member`,
-                { memberId: user._id },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+    /* ====================================
+       LOAD MESSAGES (auto detect type)
+    ==================================== */
+    const loadMessages = useCallback(async () => {
+        if (!selectedChat) return;
+        const chatId = selectedChat._id;
 
-            if (res.data.success) {
-                await loadGroups();
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const loadChats = async () => {
         try {
             setLoading(true);
 
-            const res = await api.get("/chat/my-chats", {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            /* DIRECT */
+            if (selectedChat.type === "direct") {
+                const otherUser = selectedChat.participants.find(
+                    (p) => p !== user._id
+                );
 
-            if (res.data.success) {
-                setChats(res.data.data || []);
+                const res = await api.get(`/direct-message/${otherUser}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                setMessages(res.data.data || []);
+                return;
             }
+
+            /* GROUP */
+            if (selectedChat.type === "group") {
+                const res = await api.get(`/group-message/${chatId}/messages`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                setMessages(res.data.data || []);
+                return;
+            }
+
         } catch (err) {
             setError(err.response?.data?.message || err.message);
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedChat, token, user?._id]);
 
-    const createOrGetAndSelect = async (otherUserId) => {
+    /* ========================================
+       DIRECT CHAT
+    ========================================= */
+    const startDirectChat = async (otherUserId) => {
         try {
-            // 1. Buscar chat existente con ese usuario
-            let existingChat = chats.find(chat =>
-                chat.participants?.some(p => p._id === otherUserId)
-            );
+            await api.get(`/direct-message/${otherUserId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
-            // 2. Si no existe, crearlo
-            if (!existingChat) {
-                const res = await api.post(
-                    "/chat",
-                    { participantId: otherUserId },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
+            const chat = {
+                _id: otherUserId,
+                type: "direct",
+                participants: [user._id, otherUserId]
+            };
 
-                if (res.data.success) {
-                    existingChat = res.data.data;
-                    setChats(prev => [existingChat, ...prev]);
-                } else {
-                    throw new Error(res.data.message || "No se pudo crear el chat");
-                }
-            }
+            setSelectedChat(chat);
+            setMessages([]);
 
-            // 3. Seleccionarlo
-            return await selectChat(existingChat);
+            // Esperamos a que se actualice selectedChat
+            setTimeout(() => loadMessages(), 50);
 
+            return chat;
         } catch (err) {
-            console.error("❌ createOrGetAndSelect error:", err);
             setError(err.response?.data?.message || err.message);
             return null;
         }
     };
 
-
-    const buildSelected = useCallback(
-        (chatDoc) => {
-            if (!chatDoc?._id) return null;
-
-            const isGroup = chatDoc.members !== undefined || chatDoc.isGroup;
-
-            return {
-                _id: chatDoc._id,
-                participants: chatDoc.participants || [],
-                members: chatDoc.members || [],
-                me: user?._id,
-                isGroup,
-                name: chatDoc.name,
-                description: chatDoc.description,
-                createdBy: chatDoc.createdBy,
-                ...chatDoc
-            };
-        },
-        [user?._id]
-    );
-
-    const loadMessages = useCallback(
-        async (chatId) => {
-            if (!chatId) return;
-            try {
-                setLoading(true);
-
-                const res = await api.get(`/chat/${chatId}/messages`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                if (res.data.success) {
-                    setMessages(res.data.data?.messages || []);
-                }
-            } catch (err) {
-                setError(err.response?.data?.message || err.message);
-            } finally {
-                setLoading(false);
-            }
-        },
-        [token]
-    );
-
+    /* ========================================
+       SELECT GROUP
+    ========================================= */
     const selectGroup = async (group) => {
         try {
-            setLoading(true);
-
             const groupId = group._id || group;
 
             const res = await api.get(`/groups/${groupId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            if (window.innerWidth < 600) {
-                document.querySelector(".wa-sidebar")?.classList.remove("open");
-            }
-
             if (res.data.success) {
-                const groupData = res.data.data;
+                const sel = {
+                    ...res.data.data,
+                    type: "group",
+                    members: res.data.data.members || []
+                };
 
-                setGroups(prev => {
-                    const filtered = prev.filter(g => g._id !== groupData._id);
-                    return [groupData, ...filtered];
-                });
-
-                const sel = buildSelected(groupData);
                 setSelectedChat(sel);
                 setMessages([]);
 
-                await loadMessages(sel._id);
+                setTimeout(() => loadMessages(), 50);
                 return sel;
             }
         } catch (err) {
             setError(err.response?.data?.message || err.message);
-        } finally {
-            setLoading(false);
         }
+
         return null;
     };
 
-    const selectChat = async (chatOrId) => {
-        try {
-            let chatDoc = null;
-
-            if (typeof chatOrId === "string") {
-                chatDoc = chats.find(c => c._id === chatOrId);
-
-                if (!chatDoc) {
-                    const res = await api.get("/chat/my-chats", {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-
-                    if (res.data.success) {
-                        const updated = res.data.data;
-                        setChats(updated);
-                        chatDoc = updated.find(c => c._id === chatOrId);
-                    }
-                }
-            } else {
-                chatDoc = chatOrId;
-            }
-
-            if (!chatDoc) throw new Error("Chat no encontrado");
-
-            const sel = buildSelected(chatDoc);
-            setSelectedChat(sel);
-            setMessages([]);
-
-            if (window.innerWidth < 600) {
-                document.querySelector(".wa-sidebar")?.classList.remove("open");
-            }
-
-            await loadMessages(sel._id);
-            return sel;
-        } catch (err) {
-            setError(err.message);
-            return null;
-        }
-    };
-
-    const sendMessage = async (content) => {
+    /* ========================================
+       SEND MESSAGE
+    ========================================= */
+    const sendMessage = async (text) => {
         if (!selectedChat?._id) return { success: false };
 
+        const content = text.trim();
+        if (!content) return { success: false };
+
         try {
-            const tempMessage = {
-                _id: `temp-${Date.now()}`,
-                chatId: selectedChat._id,
-                sender: user,
-                content: content.trim(),
-                createdAt: new Date().toISOString(),
-                pending: true
-            };
-
-            setMessages(prev => [...prev, tempMessage]);
-
-            const res = await api.post(
-                `/chat/${selectedChat._id}/message`,
-                { content: content.trim() },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-
-            if (res.data.success) {
-                const newMsg = res.data.data;
-
-                setMessages(prev =>
-                    prev.map(m => (m._id === tempMessage._id ? newMsg : m))
+            /* DIRECT */
+            if (selectedChat.type === "direct") {
+                const otherUser = selectedChat.participants.find(
+                    (p) => p !== user._id
                 );
 
-                return { success: true, data: newMsg };
+                const res = await api.post(
+                    `/direct-message`,
+                    { receiverId: otherUser, message: content },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+
+                if (res.data.ok) {
+                    setMessages((prev) => [...prev, res.data.data]);
+                    return { success: true };
+                }
             }
+
+            /* GROUP */
+            if (selectedChat.type === "group") {
+                const res = await api.post(
+                    `/group-message/${selectedChat._id}/message`,
+                    { message: content },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+
+                if (res.data.success) {
+                    setMessages((prev) => [...prev, res.data.data]);
+                    return { success: true };
+                }
+            }
+
         } catch (err) {
             console.error(err);
         }
@@ -272,131 +194,26 @@ export function ChatProvider({ children }) {
         return { success: false };
     };
 
-    const removeMember = async (groupId, memberId) => {
-        try {
-            const response = await api.delete(`/groups/${groupId}/members`, {
-                data: { memberId }
-            });
-
-            if (response.data.success) {
-                setGroups(prev => prev.map(group => {
-                    if (group._id === groupId) {
-                        return {
-                            ...group,
-                            members: group.members.filter(m =>
-                                m.userId?._id !== memberId && m.userId !== memberId
-                            )
-                        };
-                    }
-                    return group;
-                }));
-
-                if (memberId === user._id) {
-                    setGroups(prev => prev.filter(group => group._id !== groupId));
-                    if (selectedChat?._id === groupId) {
-                        setSelectedChat(null);
-                        setMessages([]);
-                    }
-                }
-
-                return { success: true };
-            }
-        } catch (err) {
-            return { success: false, error: err.message };
-        }
-    };
-
-    const deleteGroup = async (groupId) => {
-        try {
-            const res = await api.delete(`/groups/${groupId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            if (res.data.success) {
-                setGroups(prev => prev.filter(g => g._id !== groupId));
-
-                if (selectedChat?._id === groupId) {
-                    setSelectedChat(null);
-                    setMessages([]);
-                }
-
-                return { success: true };
-            }
-        } catch (err) {
-            return { success: false, error: err.message };
-        }
-    };
-
-    const leaveGroup = async (groupId) => {
-        try {
-            const res = await api.delete(`/groups/${groupId}/members`, {
-                data: { memberId: user._id },
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            if (res.data.success) {
-                setGroups(prev => prev.filter(g => g._id !== groupId));
-
-                if (selectedChat?._id === groupId) {
-                    setSelectedChat(null);
-                    setMessages([]);
-                }
-
-                return { success: true };
-            }
-        } catch (err) {
-            return { success: false, error: err.message };
-        }
-    };
-
-
-    const refreshGroups = async () => {
-        await loadGroups();
-    };
-
-    const ensureSelectedChat = async (chatId) => {
-        if (selectedChat?._id === chatId) return selectedChat;
-
-        const foundGroup = groups.find(g => g._id === chatId);
-        if (foundGroup) return selectGroup(foundGroup);
-
-        const foundChat = chats.find(c => c._id === chatId);
-        if (foundChat) return selectChat(foundChat);
-
-        await loadChats();
-        await loadGroups();
-
-        return null;
-    };
-
-    const clearError = () => setError(null);
-
-    const value = {
-        chats,
-        groups,
-        selectedChat,
-        messages,
-        loading,
-        error,
-        loadChats,
-        loadGroups,
-        selectChat,
-        selectGroup,
-        ensureSelectedChat,
-        sendMessage,
-        loadMessages,
-        clearError,
-        resetChatState,
-        refreshGroups,
-        joinGroup,
-        deleteGroup,
-        leaveGroup,
-        removeMember,
-        createOrGetAndSelect,
-    };
-
+    /* ========================================
+       EXPORT
+    ========================================= */
     return (
-        <ChatContext.Provider value={value}>
+        <ChatContext.Provider
+            value={{
+                groups,
+                selectedChat,
+                messages,
+                loading,
+                error,
+                loadGroups,
+                startDirectChat,
+                selectGroup,
+                sendMessage,
+                loadMessages,
+                resetChatState,
+                clearError: () => setError(null)
+            }}
+        >
             {children}
         </ChatContext.Provider>
     );
@@ -404,6 +221,6 @@ export function ChatProvider({ children }) {
 
 export function useChat() {
     const context = useContext(ChatContext);
-    if (!context) throw new Error("useChat debe usarse dentro de un ChatProvider");
+    if (!context) throw new Error("useChat debe usarse dentro de ChatProvider");
     return context;
 }

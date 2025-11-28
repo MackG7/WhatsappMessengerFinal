@@ -4,13 +4,13 @@ import { useAuth } from "../../../context/AuthContext";
 import "./UserProfileModal.css";
 
 export default function UserProfileModal({ onClose }) {
-    const { user, updateUser } = useAuth(); // Asegúrate de que updateUser venga del contexto
+    const { user, updateUser } = useAuth(); 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const fileInputRef = useRef(null);
 
-    // Estados para los campos editables
+    
     const [formData, setFormData] = useState({
         username: user?.username || "",
         bio: user?.bio || "",
@@ -29,7 +29,7 @@ export default function UserProfileModal({ onClose }) {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Validaciones
+        
         if (!file.type.startsWith('image/')) {
             setError("Por favor, selecciona una imagen válida");
             return;
@@ -44,7 +44,7 @@ export default function UserProfileModal({ onClose }) {
             setLoading(true);
             setError("");
             
-            // SOLUCIÓN: Reducir calidad de la imagen antes de convertir a base64
+            
             const compressedImage = await compressImage(file);
             
             const reader = new FileReader();
@@ -52,13 +52,12 @@ export default function UserProfileModal({ onClose }) {
                 const base64Image = event.target.result;
                 
                 try {
-                    // Intentar guardar en el backend
+                    
                     const response = await api.post("/users/upload-avatar", {
                         avatarBase64: base64Image
                     });
 
                     if (response.data.ok) {
-                        // VERIFICAR QUE updateUser EXISTA
                         if (typeof updateUser === 'function') {
                             updateUser(response.data.data);
                             setSuccess("Foto de perfil actualizada correctamente");
@@ -71,8 +70,6 @@ export default function UserProfileModal({ onClose }) {
                     }
                 } catch (backendError) {
                     console.log("Backend no disponible, guardando localmente...");
-                    
-                    // SOLUCIÓN LOCAL MEJORADA
                     if (typeof updateUser === 'function') {
                         const userWithAvatar = {
                             ...user,
@@ -102,7 +99,6 @@ export default function UserProfileModal({ onClose }) {
         }
     };
 
-    // FUNCIÓN PARA COMPRIMIR IMAGEN
     const compressImage = (file) => {
         return new Promise((resolve) => {
             const canvas = document.createElement('canvas');
@@ -110,7 +106,6 @@ export default function UserProfileModal({ onClose }) {
             const img = new Image();
             
             img.onload = () => {
-                // Redimensionar imagen (máximo 500px)
                 const MAX_WIDTH = 500;
                 const MAX_HEIGHT = 500;
                 let width = img.width;
@@ -131,11 +126,9 @@ export default function UserProfileModal({ onClose }) {
                 canvas.width = width;
                 canvas.height = height;
                 ctx.drawImage(img, 0, 0, width, height);
-                
-                // Convertir a base64 con calidad reducida
                 canvas.toBlob((blob) => {
                     resolve(blob);
-                }, 'image/jpeg', 0.7); // 70% de calidad
+                }, 'image/jpeg', 0.7); 
             };
             
             img.src = URL.createObjectURL(file);

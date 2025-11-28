@@ -4,54 +4,61 @@ import { useState } from "react";
 import DeleteConfirmationModal from "../../DeleteConfirmationModal/DeleteConfirmationModal.jsx";
 
 export default function ContactList({ contacts, onUpdate }) {
-    const { createOrGetAndSelect, deleteContact } = useChat();
+    const { startDirectChat, deleteContact } = useChat(); 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
 
-    const startChat = async(contact) => {
+    const startChat = async (contact) => {
         const contactId = contact.contactUser?._id || contact._id;
-        await createOrGetAndSelect(contactId);
-    }
+        await startDirectChat(contactId); 
+    };
 
     const handleDeleteClick = (contact, e) => {
-        e.stopPropagation(); // Evitar que inicie chat
+        e.stopPropagation();
         setSelectedContact(contact);
         setShowDeleteModal(true);
     };
 
     const handleConfirmDelete = async () => {
         if (!selectedContact) return;
-        
+
         const result = await deleteContact(selectedContact._id);
+
         if (result.success) {
             console.log("✅ Contacto eliminado:", getContactName(selectedContact));
-            if (onUpdate) onUpdate();
+            onUpdate && onUpdate();
         } else {
             console.error("❌ Error eliminando contacto:", result.error);
             alert(result.error);
         }
+
         setShowDeleteModal(false);
         setSelectedContact(null);
     };
 
     const getContactName = (contact) => {
-        return contact.alias || contact.contactUser?.username || contact.contactUser?.email;
+        return (
+            contact.alias ||
+            contact.contactUser?.username ||
+            contact.contactUser?.email
+        );
     };
 
-    return(
+    return (
         <>
             <div className="wa-contactlist">
                 {contacts.length === 0 && (
                     <div className="wa-no-contacts">No tienes contactos aún</div>
                 )}
 
-                {contacts.map(contact => {
+                {contacts.map((contact) => {
                     const name = getContactName(contact);
                     const displayEmail = contact.contactUser?.email;
                     const initials = name?.charAt(0).toUpperCase();
 
-                    return(
-                        <div key={contact._id}
+                    return (
+                        <div
+                            key={contact._id}
                             className="wa-contact-item"
                             onClick={() => startChat(contact)}
                         >
@@ -63,7 +70,7 @@ export default function ContactList({ contacts, onUpdate }) {
                             </div>
 
                             <div className="wa-contact-actions">
-                                <button 
+                                <button
                                     className="btn-delete-contact"
                                     onClick={(e) => handleDeleteClick(contact, e)}
                                     title="Eliminar contacto"
@@ -72,7 +79,7 @@ export default function ContactList({ contacts, onUpdate }) {
                                 </button>
                             </div>
                         </div>
-                    )
+                    );
                 })}
             </div>
 
@@ -84,7 +91,7 @@ export default function ContactList({ contacts, onUpdate }) {
                 }}
                 onConfirm={handleConfirmDelete}
                 itemType="contact"
-                itemName={selectedContact ? getContactName(selectedContact) : ''}
+                itemName={selectedContact ? getContactName(selectedContact) : ""}
             />
         </>
     );

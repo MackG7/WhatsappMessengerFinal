@@ -23,7 +23,7 @@ export default function ChatHeader({ toggleSidebar }) {
     return (
         <div className="wa-chat-header">
 
-            {/* === BOTÓN HAMBURGER SOLO EN MOBILE === */}
+            {/* BOTÓN HAMBURGER SOLO EN MOBILE */}
             <button
                 className="hamburger-btn"
                 onClick={toggleSidebar}
@@ -31,7 +31,7 @@ export default function ChatHeader({ toggleSidebar }) {
                 ☰
             </button>
 
-            {/* === IZQUIERDA === */}
+            {/* IZQUIERDA */}
             <div className="wa-chat-header-left">
                 <div className="wa-chat-header-avatar">{avatar}</div>
                 <div className="wa-chat-header-info">
@@ -42,7 +42,7 @@ export default function ChatHeader({ toggleSidebar }) {
                 </div>
             </div>
 
-            {/* === DERECHA === */}
+            {/* DERECHA */}
             <div className="wa-chat-header-actions">
                 <button className="chat-action-btn">
                     <i className="fa-solid fa-video"></i>

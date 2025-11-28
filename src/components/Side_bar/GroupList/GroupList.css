@@ -1,58 +1,90 @@
-.wa-grouplist{
-    height:100%;
-    overflow-y:auto;
-    background-color:#111b21;
-    padding-top:4px;
+/* LISTA DE GRUPOS */
+.group-list {
+    height: 100%;
+    overflow-y: auto;
+    background-color: #111b21;
+    padding-top: 4px;
 }
 
-.wa-grouplist-empty{
-    text-align:center;
-    color:#8696a0;
-    margin-top:40px;
-    font-size:14px;
+/* ITEM DE GRUPO */
+.group-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background .2s ease;
 }
 
-.wa-group-item{
-    display:flex;
-    align-items:center;
-    padding:10px 14px;
-    cursor:pointer;
-    transition:background .2s ease;
+.group-item:hover {
+    background-color: #202c33;
 }
 
-.wa-group-item:hover{
-    background-color:#202c33;
+.group-item.active {
+    background-color: #202c33;
 }
 
-.wa-group-avatar{
-    width:48px;
-    height:48px;
-    background-color:#2a3942;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#e9edef;
-    flex-shrink:0;
-    font-size:18px;
-    font-weight:bold;
+/* AVATAR DEL GRUPO */
+.group-avatar {
+    width: 48px;
+    height: 48px;
+    background-color: #2a3942;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e9edef;
+    flex-shrink: 0;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.wa-group-mid{
-    display:flex;
-    flex-direction:column;
-    margin-left:12px;
-    flex:1;
+/* CONTENEDOR CENTRAL */
+.wa-group-mid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.wa-group-name{
-    color:#e9edef;
-    font-size:16px;
-    font-weight:500;
+/* FILA SUPERIOR (NOMBRE + TACHO) */
+.wa-group-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 🔥 ALINEA TEXTO Y TACHO EN UNA FILA */
+    width: 100%;
 }
 
-.wa-group-last{
-    color:#8696a0;
-    font-size:13px;
-    margin-top:3px;
+/* Nombre */
+.wa-group-name {
+    color: #e9edef;
+    font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Miembros */
+.wa-group-preview {
+    color: #8696a0;
+    font-size: 13px;
+}
+
+/* ACCIONES — solo 1 botón */
+.group-actions {
+    display: none; /* NO SE USA MÁS */
+}
+
+/* Botón borrar / salir */
+.btn-delete-group {
+    background: none;
+    border: none;
+    color: #8696a0;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px;
+}
+
+.btn-delete-group:hover {
+    color: #ff6b6b;
 }

@@ -1,78 +1,74 @@
 /* ============================================================
-   🌙 SIDEBAR — WHATSAPP STYLE
-   ============================================================ */
+   SIDEBAR GENERAL
+============================================================ */
 .wa-sidebar {
-    width: 400px;
-    min-width: 400px;
+    width: 100%;
+    height: 100%;
+    background: #111b21;
     display: flex;
     flex-direction: column;
-    background: #111b21;
-    border-right: 1px solid #2a3942;
-    position: relative;
+}
+
+@media (min-width: 750px) {
+    .wa-sidebar {
+        width: 350px;
+        min-width: 350px;
+    }
 }
 
 /* ============================================================
-   📌 SIDEBAR HEADER
-   ============================================================ */
+   HEADER
+============================================================ */
 .wa-sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
+    padding: 16px;
     background: #202c33;
     border-bottom: 1px solid #2a3942;
 }
 
+/* volver solo en móvil */
+.back-btn {
+    display: none;
+}
+
+@media (max-width: 750px) {
+    .back-btn {
+        display: inline-block;
+        font-size: 22px;
+        background: none;
+        border: none;
+        color: #e9edef;
+        cursor: pointer;
+        margin-right: 8px;
+    }
+}
+
+/* usuario */
 .user-profile-header {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
-    flex: 1;
 }
 
-.user-profile-header:hover {
-    background: #2a3942;
-}
-
-/* === AVATAR === */
 .user-avatar-small {
     width: 42px;
     height: 42px;
-    border-radius: 50%;
-    overflow: hidden;
     background: #00a884;
+    border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
-}
-
-.avatar-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.avatar-initials {
-    color: #111b21;
+    align-items: center;
+    color: #111;
     font-weight: bold;
-    font-size: 17px;
 }
 
-/* === TEXTO DE USUARIO === */
-.user-info-header {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.user-name {
+.user-info-header .user-name {
     color: #e9edef;
-    font-weight: 500;
     font-size: 15px;
+    font-weight: 500;
 }
 
 .user-status {
@@ -80,56 +76,35 @@
     font-size: 12px;
 }
 
-/* === ACTIONS === */
+/* ACCIONES */
 .header-actions {
     display: flex;
     gap: 12px;
-    align-items: center;
 }
 
-.header-actions button {
-    background: none;
-    border: none;
-    color: #8696a0;
-    cursor: pointer;
-    font-size: 20px;
-    padding: 6px;
-    border-radius: 50%;
-    transition: 0.2s;
-}
-
-.header-actions button:hover {
-    background: #2a3942;
-    color: #e9edef;
-}
-
-/* BOTONES: INVITAR Y SALIR */
-.new-invite-btn {
-    padding: 7px 14px;
-    background: #00a884;
-    color: #111b21;
+.new-invite-btn,
+.wa-sidebar-logout {
+    padding: 6px 12px;
     border: none;
     border-radius: 8px;
-    font-size: 13px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    font-size: 13px;
     white-space: nowrap;
+}
+
+.new-invite-btn {
+    background: #00a884;
+    color: #111;
 }
 
 .wa-sidebar-logout {
-    padding: 7px 14px;
     background: #2a3942;
     color: #e9edef;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    white-space: nowrap;
 }
 
 /* ============================================================
-   📌 TABS
-   ============================================================ */
+   TABS
+============================================================ */
 .wa-sidebar-tabs {
     display: flex;
     background: #202c33;
@@ -138,49 +113,30 @@
 
 .wa-sidebar-tabs button {
     flex: 1;
-    padding: 14px 20px;
+    padding: 14px;
     background: none;
     border: none;
-    color: #8696a0;
-    font-size: 15px;
     cursor: pointer;
-    transition: 0.2s;
-    position: relative;
-}
-
-.wa-sidebar-tabs button:hover {
-    background: #2a3942;
-    color: #e9edef;
+    color: #8696a0;
 }
 
 .wa-sidebar-tabs button.active {
     color: #00a884;
-    font-weight: 500;
-}
-
-.wa-sidebar-tabs button.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: #00a884;
+    border-bottom: 2px solid #00a884;
 }
 
 /* ============================================================
-   📌 CONTENT
-   ============================================================ */
+   CONTENIDO SCROLL
+============================================================ */
 .wa-sidebar-content {
     flex: 1;
     overflow-y: auto;
-    padding: 0 4px;
-    padding-bottom: 70px; /* evita que tape el botón flotante */
+    padding-bottom: 60px;
 }
 
 /* ============================================================
-   📌 FLOAT NEW BUTTON (LEFT SIDE)
-   ============================================================ */
+   BOTÓN FLOTANTE
+============================================================ */
 .wa-sidebar-new {
     position: absolute;
     bottom: 20px;
@@ -189,82 +145,10 @@
     height: 45px;
     border-radius: 50%;
     background: #00a884;
-    border: none;
-    color: #111b21;
-    font-size: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.wa-sidebar-new:hover {
-    background: #06cf9c;
-    transform: scale(1.08);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-}
-
-.wa-sidebar-new::before {
-    content: '+';
-    font-size: 22px;
-    font-weight: 300;
-    transform: translateY(-1px);
-}
-
-/* ============================================================
-   📌 GROUP LIST
-   ============================================================ */
-.group-list-item {
-    display: flex;
-    align-items: center;
-    padding: 14px 16px;
-    gap: 12px;
-    cursor: pointer;
-    border-bottom: 1px solid #2a3942;
-    transition: background 0.2s;
-}
-
-.group-list-item:hover {
-    background: #202c33;
-}
-
-.group-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #00a884;
     color: #111;
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.group-name {
-    font-size: 15px;
-    font-weight: 500;
-    color: #e9edef;
-}
-
-/* ============================================================
-   📌 SCROLLBAR
-   ============================================================ */
-.wa-sidebar-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.wa-sidebar-content::-webkit-scrollbar-track {
-    background: #1f2c33;
-}
-
-.wa-sidebar-content::-webkit-scrollbar-thumb {
-    background: #8696a0;
-    border-radius: 4px;
-}
-
-.wa-sidebar-content::-webkit-scrollbar-thumb:hover {
-    background: #aebac1;
+    border: none;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

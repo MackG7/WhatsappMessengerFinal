@@ -1,5 +1,69 @@
+* LAYOUT GENERAL */
+
 .wa-layout {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
+
+@media (min-width: 768px) {
+    .wa-layout {
+        flex-direction: row; 
+    }
+}
+
+/* SIDEBAR (Desktop) */
+
+.wa-sidebar-desktop {
+    width: 350px;
+    min-width: 350px;
+    max-width: 350px;
+    transition: width .2s ease;
+    flex-shrink: 0; 
+}
+
+@media (max-width: 1100px) {
+    .wa-sidebar-desktop {
+        width: 280px;
+        min-width: 260px;
+    }
+}
+
+@media (max-width: 900px) {
+    .wa-sidebar-desktop {
+        width: 240px;
+        min-width: 220px;
+    }
+
+    .wa-sidebar-header .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+}
+
+/* Desaparece en móvil */
+
+@media (max-width: 767px) {
+    .wa-sidebar-desktop {
+        display: none !important;
+    }
+
+    .wa-sidebar-mobile {
+        display: block !important;
+    }
+}
+
+/* PANEL DEL CHAT (zona derecha) */
+
+.wa-chat-panel {
+    flex: 1 !important;   
+    min-width: 0 !important; 
+    width: 100% !important; 
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+

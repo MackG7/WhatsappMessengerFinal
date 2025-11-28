@@ -7,37 +7,41 @@ export default function GroupList({ groups, onUpdate }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
 
-    console.log("🎯 GroupList - Grupos recibidos:", groups);
-
     const handleDeleteClick = (group, e) => {
-        e.stopPropagation(); // Evitar que se seleccione el grupo
+        e.stopPropagation();
         setSelectedGroup(group);
         setShowDeleteModal(true);
     };
 
     const handleConfirmDelete = async () => {
         if (!selectedGroup) return;
-        
-        const result = await deleteGroup(selectedGroup._id);
+
+        const isAdmin = isGroupAdmin(selectedGroup);
+
+        const result = isAdmin
+            ? await deleteGroup(selectedGroup._id)
+            : await leaveGroup(selectedGroup._id);
+
         if (result.success) {
-            console.log("✅ Grupo eliminado:", selectedGroup.name);
-            if (onUpdate) onUpdate();
-        } else {
-            console.error("❌ Error eliminando grupo:", result.error);
-            alert(result.error);
+            onUpdate?.();
         }
+
         setShowDeleteModal(false);
         setSelectedGroup(null);
     };
 
     const isGroupAdmin = (group) => {
-        return group.members?.some(member => 
-            member.userId?._id === group.createdBy?._id && 
-            member.role === 'admin'
+        if (!group?.members || !group?.createdBy?._id) return false;
+
+        return group.members.some(
+            (member) =>
+                (member.userId?._id === group.createdBy._id ||
+                    member.userId === group.createdBy._id) &&
+                member.role === "admin"
         );
     };
 
-    if (!groups || groups.length === 0) {
+    if (!groups?.length) {
         return (
             <div className="empty-groups">
                 <p>No tienes grupos aún</p>
@@ -49,38 +53,44 @@ export default function GroupList({ groups, onUpdate }) {
     return (
         <>
             <div className="group-list">
-                {groups.map((group) => (
-                    <div
-                        key={group._id}
-                        className={`group-item ${selectedChat?._id === group._id ? 'active' : ''}`}
-                        onClick={() => {
-                            console.log("🖱️ Click en grupo:", group.name);
-                            selectGroup(group);
-                        }}
-                    >
-                        <div className="group-avatar">
-                            {group.name ? group.name.charAt(0).toUpperCase() : 'G'}
-                        </div>
-                        <div className="group-info">
-                            <div className="group-name">
-                                {group.name || 'Grupo sin nombre'}
-                                {isGroupAdmin(group) && <span className="admin-badge">Admin</span>}
+                {groups.map((group) => {
+                    const isActive = selectedChat?._id === group._id;
+                    const isAdmin = isGroupAdmin(group);
+
+                    return (
+                        <div
+                            key={group._id}
+                            className={`group-item ${isActive ? "active" : ""}`}
+                            onClick={() => selectGroup(group)}
+                        >
+                            {/* Avatar */}
+                            <div className="group-avatar">
+                                {group.name?.charAt(0).toUpperCase() || "G"}
                             </div>
-                            <div className="group-preview">
-                                {group.members?.length || 0} miembros
+
+                            {/* NOMBRE + TACHO EN LA MISMA FILA */}
+                            <div className="wa-group-mid">
+                                <div className="wa-group-top-row">
+                                    <div className="wa-group-name">
+                                        {group.name || "Grupo sin nombre"}
+                                    </div>
+
+                                    <button
+                                        className="btn-delete-group"
+                                        onClick={(e) => handleDeleteClick(group, e)}
+                                        title={isAdmin ? "Eliminar grupo" : "Salir del grupo"}
+                                    >
+                                        {isAdmin ? "🗑️" : "🚪"}
+                                    </button>
+                                </div>
+
+                                <div className="wa-group-preview">
+                                    {group.members?.length || 0} miembros
+                                </div>
                             </div>
                         </div>
-                        <div className="group-actions">
-                            <button 
-                                className="btn-delete-group"
-                                onClick={(e) => handleDeleteClick(group, e)}
-                                title={isGroupAdmin(group) ? "Eliminar grupo" : "Salir del grupo"}
-                            >
-                                {isGroupAdmin(group) ? "🗑️" : "🚪"}
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             <DeleteConfirmationModal
@@ -92,7 +102,11 @@ export default function GroupList({ groups, onUpdate }) {
                 onConfirm={handleConfirmDelete}
                 itemType="group"
                 itemName={selectedGroup?.name}
-                actionType={selectedGroup && isGroupAdmin(selectedGroup) ? "delete" : "leave"}
+                actionType={
+                    selectedGroup && isGroupAdmin(selectedGroup)
+                        ? "delete"
+                        : "leave"
+                }
             />
         </>
     );

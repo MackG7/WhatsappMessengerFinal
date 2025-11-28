@@ -24,7 +24,7 @@ export default function ChatList({ chats, onUpdate }) {
     };
 
     const handleDeleteClick = (chat, e) => {
-        e.stopPropagation(); // Evitar que se seleccione el chat
+        e.stopPropagation(); 
         setSelectedChatItem(chat);
         setShowDeleteModal(true);
     };

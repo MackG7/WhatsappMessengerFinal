@@ -1,214 +1,210 @@
-.flex {
+/* ======================================================
+   RESET GENERAL
+====================================================== */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    background: #111b21;
+}
+
+/* ======================================================
+   CONTENEDOR PRINCIPAL
+====================================================== */
+.wa-app {
     display: flex;
-}
-
-.h-screen {
+    flex-direction: row;
+    width: 100%;
     height: 100vh;
+    overflow: hidden;
+    background: #111b21;
 }
 
-.bg-\[\#111b21\] {
-    background-color: #111b21;
+/* ======================================================
+   BREAKPOINTS OBJETIVOS:
+   +1100px → Desktop completo
+   1100px → 750px → Sidebar normal, no se achica
+   750px → 600px → Sidebar oculto + hamburguesa visible
+   <600px → Drawer ocupa pantalla completa
+====================================================== */
+
+
+/* ======================================================
+   SIDEBAR DESKTOP (visible SOLO desde 750px)
+====================================================== */
+.wa-sidebar-desktop {
+    width: 350px;
+    min-width: 350px;
+    background: #111b21;
+    border-right: 1px solid #2a3942;
+    display: block;
 }
 
-.text-gray-200 {
-    color: #e5e7eb;
+@media (max-width: 750px) {
+    .wa-sidebar-desktop {
+        display: none !important;
+    }
 }
 
-.overflow-hidden {
+
+
+/* ======================================================
+   SIDEBAR MOBILE — DRAWER
+====================================================== */
+.wa-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    display: none; /* por defecto oculto */
+    z-index: 200;
+}
+
+.wa-sidebar-dim {
+    width: 30%;
+    background: rgba(0,0,0,0.5);
+}
+
+.wa-sidebar-drawer {
+    width: 70%;
+    height: 100%;
+    background: #111b21;
+    border-right: 1px solid #2a3942;
+    animation: slideIn .25s ease forwards;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(0); }
+}
+
+/* Drawer activo desde 750px hacia abajo */
+@media (max-width: 750px) {
+    .wa-sidebar-overlay {
+        display: flex !important;
+    }
+}
+
+/* MOBILE MUY PEQUEÑO (600px → 0px) = Drawer full-hd */
+@media (max-width: 600px) {
+    .wa-sidebar-dim { 
+        display: none !important; 
+    }
+
+    .wa-sidebar-drawer { 
+        width: 100% !important; 
+    }
+}
+
+
+
+/* ======================================================
+   CHAT PANEL (parte derecha)
+====================================================== */
+.wa-chat-panel {
+    flex: 1;
+    background: #0b141a;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
 }
 
-.flex-1 {
-    flex: 1;
-}
 
-.flex-col {
-    flex-direction: column;
-}
-
-/* LÍNEA SEPARADORA */
-.border-r {
-    border-right-width: 1px;
-}
-
-.border-\[\#2a3942\] {
-    border-color: #2a3942;
-}
-
-.w-\[400px\] {
-    width: 400px;
-}
-
-.min-w-\[400px\] {
-    min-width: 400px;
-}
-
-/* PANTALLA DE BIENVENIDA */
-.welcome-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    background: linear-gradient(135deg, #111b21 0%, #0b141a 100%);
-    padding: 0px;
-    text-align: center;
-}
-
-/* LOGO GRANDE DE WHATSAPP EN GRIS */
-.whatsapp-logo-large {
-    margin-bottom: 40px;
-    animation: floatLogo 3s ease-in-out infinite;
-}
-
-.wa-logo-svg {
-    filter: drop-shadow(0 0 20px rgba(134, 150, 160, 0.3)); /* Gris en lugar de verde */
-    transition: all 0.3s ease;
-    opacity: 0.8; /* Un poco de transparencia para suavizar */
-}
-
-.wa-logo-svg:hover {
-    filter: drop-shadow(0 0 30px rgba(134, 150, 160, 0.5));
-    transform: scale(1.05);
-    opacity: 1;
-}
-
-/* CONTENIDO DE BIENVENIDA */
-.welcome-content {
-    max-width: 500px;
-}
-
-.welcome-title {
-    font-size: 32px;
-    font-weight: 300;
+/* ======================================================
+   CHAT HEADER
+====================================================== */
+.wa-chat-header {
+    background: #202c33;
     color: #e9edef;
-    margin-bottom: 16px;
-    letter-spacing: 0.5px;
-}
-
-.welcome-subtitle {
-    font-size: 16px;
-    color: #8696a0; /* Gris de WhatsApp */
-    margin-bottom: 40px;
-    line-height: 1.5;
-}
-
-/* LISTA DE CARACTERÍSTICAS */
-.welcome-features {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 40px;
-}
-
-.feature-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #2a3942;
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #aebac1; /* Gris más claro */
-    font-size: 14px;
-    padding: 12px 20px;
-    background: rgba(134, 150, 160, 0.1); /* Fondo gris sutil */
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(134, 150, 160, 0.2);
 }
 
-.feature-item:hover {
-    background: rgba(134, 150, 160, 0.15);
-    transform: translateX(5px);
-    border-color: rgba(134, 150, 160, 0.3);
+/* hamburguesa visible SOLO desde 750px */
+.hamburger-btn {
+    display: none;
 }
 
-.feature-icon {
-    font-size: 18px;
-    width: 24px;
+@media (max-width: 750px) {
+    .hamburger-btn {
+        display: inline-flex;
+        font-size: 26px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #e9edef;
+    }
+}
+
+.wa-chat-header-avatar {
+    width: 40px;
+    height: 40px;
+    background: #00a884;
+    color: #111;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+
+/* ======================================================
+   CHAT BODY WRAPPER
+====================================================== */
+.wa-chat-body-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    background: #0b141a;
+}
+
+
+
+/* ======================================================
+   EMPTY SCREEN
+====================================================== */
+.wa-empty-screen {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    opacity: 0.8;
+    gap: 14px;
+    padding: 20px;
 }
 
-/* PIE DE PÁGINA */
-.welcome-footer {
-    border-top: 1px solid #2a3942;
-    padding-top: 20px;
+.empty-title {
+    color: #e9edef;
+    font-size: 26px;
+    font-weight: 300;
 }
 
-.footer-text {
-    font-size: 13px;
-    color: #8696a0; /* Gris de WhatsApp */
-    line-height: 1.4;
+.empty-subtitle {
+    color: #8696a0;
+    font-size: 14px;
 }
 
-/* ANIMACIONES */
-@keyframes floatLogo {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+.empty-feature {
+    color: #aebac1;
+    font-size: 14px;
 }
 
-/* EFECTO DE BRILLO SUTIL EN EL LOGO GRIS */
 .wa-logo-svg {
-    animation: gentleGlow 4s ease-in-out infinite;
+    width: 180px;
+    opacity: 0.7;
 }
 
-@keyframes gentleGlow {
-    0%, 100% {
-        filter: drop-shadow(0 0 15px rgba(134, 150, 160, 0.2));
-    }
-    50% {
-        filter: drop-shadow(0 0 25px rgba(134, 150, 160, 0.4));
-    }
+@media (max-width: 750px) {
+    .wa-logo-svg { width: 140px; }
+    .empty-title { font-size: 22px; }
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .welcome-screen {
-        padding: 20px;
-    }
-    
-    .whatsapp-logo-large {
-        margin-bottom: 30px;
-    }
-    
-    .wa-logo-svg {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .welcome-title {
-        font-size: 24px;
-    }
-    
-    .welcome-subtitle {
-        font-size: 14px;
-    }
-    
-    .feature-item {
-        font-size: 13px;
-        padding: 10px 16px;
-    }
-}
 
-/* Para pantallas muy grandes */
-@media (min-width: 1400px) {
-    .welcome-screen {
-        padding: 60px;
-    }
-    
-    .whatsapp-logo-large {
-        margin-bottom: 50px;
-    }
-    
-    .wa-logo-svg {
-        width: 220px;
-        height: 220px;
-    }
-    
-    .welcome-title {
-        font-size: 36px;
-    }
-}
+/* ======================================================
+   FIN DEL ARCHIVO — TODO FUNCIONANDO
+====================================================== */
 

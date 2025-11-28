@@ -1,6 +1,5 @@
-// GroupMembersModal.jsx
 import { useState } from "react";
-import { useChat } from "../../../context/ChatContext";
+import { useChat } from "../../../context/chatContext";
 import MemberList from "../MemberList/MemberList";
 import "./GroupMembersModal.css";
 

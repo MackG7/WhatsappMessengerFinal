@@ -1,15 +1,16 @@
 import { useState } from "react";
 import "./DeleteConfirmationModal.css";
+import { AlertTriangle } from "lucide-react";
 
-export default function DeleteConfirmationModal({ 
-    isOpen, 
-    onClose, 
-    onConfirm, 
-    itemType, 
+export default function DeleteConfirmationModal({
+    isOpen,
+    onClose,
+    onConfirm,
+    itemType,
     itemName,
-    actionType = "delete", // "delete", "leave", "removeMember"
-    memberName = "", // Nombre del miembro para removeMember
-    isSelf = false // Si es auto-eliminación
+    actionType = "delete",
+    memberName = "",
+    isSelf = false
 }) {
     const [loading, setLoading] = useState(false);
 
@@ -22,110 +23,89 @@ export default function DeleteConfirmationModal({
         onClose();
     };
 
-    const getTitle = () => {
-        switch (actionType) {
-            case 'leave':
-                return "Confirmar salida";
-            case 'removeMember':
-                return "Remover miembro";
-            default:
-                return "Confirmar eliminación";
+    const titleMap = {
+        delete: "Confirmar eliminación",
+        leave: "Salir del grupo",
+        removeMember: isSelf ? "Salir del grupo" : "Remover miembro"
+    };
+
+    const messageMap = {
+        delete: {
+            chat: `¿Eliminar el chat con ${itemName}?`,
+            contact: `¿Eliminar a ${itemName} de tus contactos?`,
+            group: `¿Eliminar el grupo "${itemName}"?`,
+            message: "¿Eliminar este mensaje?",
+            default: "¿Eliminar este elemento?"
+        },
+        leave: {
+            group: `¿Querés salir del grupo "${itemName}"?`,
+            default: "¿Querés salir?"
+        },
+        removeMember: {
+            self: `¿Querés salir del grupo "${itemName}"?`,
+            member: `¿Remover a ${memberName} del grupo "${itemName}"?`
         }
     };
 
     const getMessage = () => {
         if (actionType === "leave") {
-            switch (itemType) {
-                case 'group':
-                    return `¿Estás seguro de que quieres salir del grupo "${itemName}"?`;
-                default:
-                    return `¿Estás seguro de que quieres salir?`;
-            }
+            return messageMap.leave[itemType] || messageMap.leave.default;
         }
-
         if (actionType === "removeMember") {
-            if (isSelf) {
-                return `¿Estás seguro de que quieres salir del grupo "${itemName}"?`;
-            }
-            return `¿Estás seguro de que quieres remover a ${memberName} del grupo "${itemName}"?`;
+            return isSelf
+                ? messageMap.removeMember.self
+                : messageMap.removeMember.member;
         }
-
-        switch (itemType) {
-            case 'message':
-                return '¿Estás seguro de que quieres eliminar este mensaje?';
-            case 'chat':
-                return `¿Estás seguro de que quieres eliminar el chat con ${itemName}?`;
-            case 'contact':
-                return `¿Estás seguro de que quieres eliminar a ${itemName} de tus contactos?`;
-            case 'group':
-                return `¿Estás seguro de que quieres eliminar el grupo "${itemName}"?`;
-            case 'member':
-                return `¿Estás seguro de que quieres eliminar a ${itemName} del grupo?`;
-            default:
-                return '¿Estás seguro de que quieres eliminar este elemento?';
-        }
-    };
-
-    const getWarningText = () => {
-        if (actionType === "removeMember" && !isSelf) {
-            return "El miembro perderá acceso al grupo.";
-        }
-        return "Esta acción no se puede deshacer.";
+        return messageMap.delete[itemType] || messageMap.delete.default;
     };
 
     const getButtonText = () => {
         if (loading) {
-            if (actionType === "leave" || (actionType === "removeMember" && isSelf)) {
-                return "Saliendo...";
-            } else if (actionType === "removeMember") {
-                return "Removiendo...";
-            } else {
-                return "Eliminando...";
-            }
+            return actionType === "leave"
+                ? "Saliendo..."
+                : actionType === "removeMember"
+                ? "Removiendo..."
+                : "Eliminando...";
         }
-
-        if (actionType === "leave" || (actionType === "removeMember" && isSelf)) {
-            return "Salir";
-        } else if (actionType === "removeMember") {
-            return "Remover";
-        } else {
-            return "Eliminar";
-        }
+        if (actionType === "leave") return "Salir";
+        if (actionType === "removeMember") return "Remover";
+        return "Eliminar";
     };
 
-    const getButtonClass = () => {
-        if (actionType === "leave" || (actionType === "removeMember" && isSelf)) {
-            return "btn-leave";
-        } else if (actionType === "removeMember") {
-            return "btn-remove";
-        } else {
-            return "btn-delete";
-        }
+    const buttonClassMap = {
+        delete: "btn-delete",
+        leave: "btn-leave",
+        removeMember: "btn-remove"
     };
 
     return (
         <div className="modal-overlay">
             <div className="delete-confirmation-modal">
+                
+                {/* HEADER */}
                 <div className="delete-modal-header">
-                    <h3>{getTitle()}</h3>
+                    <h3>{titleMap[actionType]}</h3>
                 </div>
-                
+
+                {/* BODY */}
                 <div className="delete-modal-body">
-                    <div className="warning-icon">⚠️</div>
+                    <AlertTriangle className="warning-icon-svg" size={48} />
                     <p>{getMessage()}</p>
-                    <p className="warning-text">{getWarningText()}</p>
+                    <p className="warning-text">Esta acción no se puede deshacer.</p>
                 </div>
-                
+
+                {/* BUTTONS */}
                 <div className="delete-modal-actions">
-                    <button 
+                    <button
                         className="btn-cancel"
                         onClick={onClose}
                         disabled={loading}
                     >
                         Cancelar
                     </button>
-                    <button 
-                        className={getButtonClass()}
+
+                    <button
+                        className={buttonClassMap[actionType]}
                         onClick={handleConfirm}
                         disabled={loading}
                     >
