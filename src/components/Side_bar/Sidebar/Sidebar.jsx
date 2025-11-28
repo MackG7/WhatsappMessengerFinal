@@ -9,18 +9,15 @@ import api from "../../../api/axios";
 import { useAuth } from "../../../context/AuthContext";
 import { useChat } from "../../../context/chatContext";
 
-export default function Sidebar({ mobileOpen, setMobileOpen }) {
+export default function Sidebar({ onClose }) {
     const [activeTab, setActiveTab] = useState("contacts");
     const [contacts, setContacts] = useState([]);
     const [showContactModal, setShowContactModal] = useState(false);
     const [showGroupModal, setShowGroupModal] = useState(false);
     const [showProfileModal, setShowProfileModal] = useState(false);
 
-    // 🔥 YA NO USAMOS chats ni loadChats
     const { groups, loadGroups } = useChat();
     const { user, logout } = useAuth();
-
-    const closeMobileSidebar = () => setMobileOpen(false);
 
     useEffect(() => {
         loadData();
@@ -30,9 +27,9 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
         try {
             const resContacts = await api.get("/contacts");
             setContacts(resContacts.data.data || []);
-            await loadGroups(); // solo grupos
+            await loadGroups();
         } catch (err) {
-            console.error("❌ Error loading sidebar:", err);
+            console.error("Error loading sidebar:", err);
         }
     };
 
@@ -43,16 +40,19 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
     };
 
     const handleSidebarAction = () => {
-        if (window.innerWidth < 600) closeMobileSidebar();
+        if (window.innerWidth < 751 && onClose) {
+            onClose();
+        }
     };
 
     return (
         <aside className="wa-sidebar">
-
-            {/* HEADER */}
             <div className="wa-sidebar-header">
                 <div className="wa-sidebar-header-left">
-                    <button className="back-btn" onClick={closeMobileSidebar}>←</button>
+                    {/* BOTÓN CERRAR PARA MÓVIL */}
+                    <button className="close-sidebar-btn" onClick={onClose}>
+                        ✕
+                    </button>
 
                     <div
                         className="user-profile-header"
@@ -68,6 +68,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                                 <div className="avatar-initials">{getInitials()}</div>
                             )}
                         </div>
+
                         <div className="user-info-header">
                             <div className="user-name">{user?.username || user?.email}</div>
                             <div className="user-status">En línea</div>
@@ -76,8 +77,8 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                 </div>
 
                 <div className="header-actions">
-                    <button 
-                        className="new-invite-btn" 
+                    <button
+                        className="new-invite-btn"
                         onClick={() => {
                             window.location.href = "/invite";
                             handleSidebarAction();
@@ -86,8 +87,8 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                         Invitar
                     </button>
 
-                    <button 
-                        className="wa-sidebar-logout" 
+                    <button
+                        className="wa-sidebar-logout"
                         onClick={() => {
                             logout();
                             handleSidebarAction();
@@ -98,23 +99,9 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                 </div>
             </div>
 
-            {/* TABS */}
             <div className="wa-sidebar-tabs">
-                {/* 🔥 ChatList deshabilitado por ahora */}
-                {/* 
-                <button 
-                    className={activeTab === "chats" ? "active" : ""} 
-                    onClick={() => {
-                        setActiveTab("chats");
-                        handleSidebarAction();
-                    }}
-                >
-                    Chats
-                </button>
-                */}
-
-                <button 
-                    className={activeTab === "contacts" ? "active" : ""} 
+                <button
+                    className={activeTab === "contacts" ? "active" : ""}
                     onClick={() => {
                         setActiveTab("contacts");
                         handleSidebarAction();
@@ -123,8 +110,8 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                     Contactos {contacts.length > 0 && `(${contacts.length})`}
                 </button>
 
-                <button 
-                    className={activeTab === "groups" ? "active" : ""} 
+                <button
+                    className={activeTab === "groups" ? "active" : ""}
                     onClick={() => {
                         setActiveTab("groups");
                         handleSidebarAction();
@@ -134,25 +121,22 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                 </button>
             </div>
 
-            {/* CONTENIDO */}
             <div className="wa-sidebar-content">
-
                 {activeTab === "contacts" && (
-                    <ContactList 
-                        contacts={contacts} 
+                    <ContactList
+                        contacts={contacts}
                         onContactSelect={handleSidebarAction}
                     />
                 )}
 
                 {activeTab === "groups" && (
-                    <GroupList 
-                        groups={groups || []} 
+                    <GroupList
+                        groups={groups || []}
                         onGroupSelect={handleSidebarAction}
                     />
                 )}
             </div>
 
-            {/* BOTÓN FLOTANTE */}
             {(activeTab === "contacts" || activeTab === "groups") && (
                 <button
                     className="wa-sidebar-new"
@@ -160,11 +144,13 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
                         activeTab === "contacts"
                             ? setShowContactModal(true)
                             : setShowGroupModal(true);
+                        handleSidebarAction();
                     }}
-                />
+                >
+                    +
+                </button>
             )}
 
-            {/* MODALES */}
             {showContactModal && (
                 <NewContactModal
                     onClose={() => setShowContactModal(false)}
@@ -186,8 +172,8 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
             )}
 
             {showProfileModal && (
-                <UserProfileModal 
-                    onClose={() => setShowProfileModal(false)} 
+                <UserProfileModal
+                    onClose={() => setShowProfileModal(false)}
                     onSuccess={() => {
                         loadData();
                         handleSidebarAction();

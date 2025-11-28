@@ -50,10 +50,6 @@
     .wa-sidebar-desktop {
         display: none !important;
     }
-
-    .wa-sidebar-mobile {
-        display: block !important;
-    }
 }
 
 /* PANEL DEL CHAT (zona derecha) */

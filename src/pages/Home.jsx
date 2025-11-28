@@ -1,57 +1,52 @@
+import { useState } from "react";
 import Sidebar from "../components/Side_bar/Sidebar/Sidebar";
 import ChatWindow from "../components/chatWindow/ChatWindow";
 import { useChat } from "../context/chatContext";
-import { useState } from "react";
 import "./Home.css";
 
 export default function Home() {
     const { selectedChat } = useChat();
     const [mobileOpen, setMobileOpen] = useState(false);
 
+    const closeSidebar = () => setMobileOpen(false);
+    const openSidebar = () => setMobileOpen(true);
+
     return (
         <div className="wa-app">
-
             {/* SIDEBAR DESKTOP */}
             <div className="wa-sidebar-desktop">
-                <Sidebar
-                    mobileOpen={mobileOpen}
-                    setMobileOpen={setMobileOpen}
-                />
+                <Sidebar onClose={closeSidebar} />
             </div>
 
-            {/* SIDEBAR MOBILE */}
+            {/* OVERLAY MOBILE */}
             {mobileOpen && (
-                <div className="wa-sidebar-overlay" onClick={() => setMobileOpen(false)}>
-                    <div
-                        className="wa-sidebar-drawer"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <Sidebar
-                            mobileOpen={mobileOpen}
-                            setMobileOpen={setMobileOpen}
-                        />
+                <div className="wa-sidebar-overlay open" onClick={closeSidebar}>
+                    <div className="wa-sidebar-drawer" onClick={(e) => e.stopPropagation()}>
+                        <Sidebar onClose={closeSidebar} />
                     </div>
                 </div>
             )}
 
             {/* PANEL DERECHO */}
             <div className="wa-chat-panel">
-
-                {/* HEADER */}
                 <div className="wa-chat-header">
-                    <button
-                        className="hamburger-btn"
-                        onClick={() => setMobileOpen(true)}
-                    >
+                    {/* BOTÓN HAMBURGUESA */}
+                    <button className="hamburger-btn" onClick={openSidebar}>
                         ☰
                     </button>
+
+                    {/* BOTÓN REGRESAR AL MENÚ */}
+                    {selectedChat && (
+                        <button className="back-to-menu-btn" onClick={openSidebar}>
+                            ←
+                        </button>
+                    )}
 
                     {selectedChat ? (
                         <>
                             <div className="wa-chat-header-avatar">
                                 {selectedChat.name?.charAt(0)}
                             </div>
-
                             <div className="wa-chat-header-title">
                                 {selectedChat.name}
                             </div>
@@ -63,7 +58,6 @@ export default function Home() {
                     )}
                 </div>
 
-                {/* CUERPO */}
                 <div className="wa-chat-body-wrapper">
                     {selectedChat ? (
                         <ChatWindow />
@@ -72,9 +66,9 @@ export default function Home() {
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
-                                width="120"
-                                height="120"
-                                className="wa-logo-svg animated-whatsapp"
+                                width="200"
+                                height="200"
+                                className="wa-logo-svg"
                             >
                                 <path
                                     fill="#8696a0"
@@ -86,14 +80,12 @@ export default function Home() {
                             <p className="empty-subtitle">
                                 Envía y recibe mensajes sin mantener tu teléfono conectado
                             </p>
-
                             <p className="empty-feature">💬 Chatea con tus contactos</p>
                             <p className="empty-feature">👥 Crea grupos</p>
                             <p className="empty-feature">🔒 Mensajes cifrados</p>
                         </div>
                     )}
                 </div>
-
             </div>
         </div>
     );
