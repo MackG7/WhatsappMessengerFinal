@@ -65,7 +65,7 @@ export default function InviteRegisterPage(){
             <div className="auth-box invite-register-box">
                 <div className="auth-logo">
                     <div className="whatsapp-logo"></div>
-                    <h1>WhatsApp</h1>
+                    <h1>WhatsApp Messenger</h1>
                 </div>
 
                 <div className="invite-header">

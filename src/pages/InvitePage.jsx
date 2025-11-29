@@ -69,7 +69,7 @@ export default function InvitePage(){
             <div className="auth-box invite-box">
                 <div className="auth-logo">
                     <div className="whatsapp-logo"></div>
-                    <h1>WhatsApp</h1>
+                    <h1>WhatsApp Messenger</h1>
                 </div>
 
                 <h2 className="invite-contact">Invitar Contacto</h2>
